@@ -1,0 +1,39 @@
+body {
+  background-color: #1e1e2e;
+  color: white;
+  font-family: 'Courier New', monospace;
+  margin: 0;
+}
+
+.App { display: flex; flex-direction: column; align-items: center; height: 100vh; }
+.setup { justify-content: center; }
+
+input { padding: 10px; font-size: 1.2rem; background: #333; color: white; border: 1px solid #555; margin: 5px; }
+button { padding: 10px 20px; font-size: 1rem; cursor: pointer; background: #4ade80; border: none; font-weight: bold; }
+
+.notebook {
+  display: flex;
+  width: 100%;
+  max-width: 800px;
+  height: 70vh;
+  border: 2px solid #555;
+  margin-top: 20px;
+}
+
+.column { flex: 1; padding: 10px; display: flex; flex-direction: column; }
+.defense { background-color: #232333; border-right: 2px solid #555; }
+.attack { background-color: #2a2a3c; }
+
+.logs { overflow-y: auto; flex: 1; margin-top: 10px; }
+
+.log-row {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid #444;
+  padding: 8px;
+  font-size: 1.2rem;
+}
+
+.score { color: #facc15; }
+.header { text-align: center; margin-top: 20px; }
+.secret-display { font-size: 2rem; color: #60a5fa; margin: 10px; letter-spacing: 5px; }
