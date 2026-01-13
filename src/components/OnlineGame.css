@@ -67,6 +67,29 @@
   border: 1px solid rgba(0, 136, 255, 0.3);
 }
 
+.exit-game-btn {
+  width: 36px;
+  height: 36px;
+  background: rgba(255, 0, 128, 0.1);
+  border: 1px solid rgba(255, 0, 128, 0.3);
+  border-radius: 6px;
+  color: #ff0080;
+  font-size: 1.2rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.exit-game-btn:hover {
+  background: rgba(255, 0, 128, 0.2);
+  border-color: #ff0080;
+  box-shadow: 0 0 15px rgba(255, 0, 128, 0.3);
+  transform: scale(1.05);
+}
+
 .timer {
   font-family: 'Courier New', monospace;
   font-size: 1.1rem;

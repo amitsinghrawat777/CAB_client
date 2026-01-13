@@ -254,6 +254,14 @@ function OnlineGame({ socket, gameData, onBack }) {
     setGameResult((prev) => ({ ...prev, rematchRequested: true }));
   };
 
+  const exitGame = () => {
+    if (window.confirm("Are you sure you want to exit? This will forfeit the game.")) {
+      socket.emit("leave_room", { roomCode });
+      localStorage.removeItem(GAME_STATE_KEY);
+      onBack();
+    }
+  };
+
   const formatTime = (seconds) => {
     const m = Math.floor(seconds / 60);
     const s = seconds % 60;
@@ -266,6 +274,9 @@ function OnlineGame({ socket, gameData, onBack }) {
       <div className="online-game setup-phase">
         <div className="game-header">
           <div className="header-left">
+            <button className="exit-game-btn" onClick={exitGame} title="Exit Game">
+              ✕
+            </button>
             <span className="room-badge">ROOM: {roomCode}</span>
             <span className="mode-badge">{gameMode.toUpperCase()}</span>
           </div>
@@ -284,6 +295,8 @@ function OnlineGame({ socket, gameData, onBack }) {
                   <input
                     key={i}
                     type="text"
+                    inputMode="numeric"
+                    pattern="[0-9]*"
                     maxLength={1}
                     className="digit-input"
                     value={secret[i] || ""}
@@ -410,6 +423,9 @@ function OnlineGame({ socket, gameData, onBack }) {
       {/* Header */}
       <div className="game-header">
         <div className="header-left">
+          <button className="exit-game-btn" onClick={exitGame} title="Exit Game">
+            ✕
+          </button>
           <span className="room-badge">ROOM: {roomCode}</span>
           {gameMode === "blitz" && (
             <span className={`timer ${timeLeft < 60 ? "warning" : ""}`}>
@@ -479,6 +495,8 @@ function OnlineGame({ socket, gameData, onBack }) {
                   <input
                     key={i}
                     type="text"
+                    inputMode="numeric"
+                    pattern="[0-9]*"
                     maxLength={1}
                     className="guess-input"
                     value={guess[i] || ""}

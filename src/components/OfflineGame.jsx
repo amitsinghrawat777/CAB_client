@@ -151,6 +151,8 @@ function OfflineGame({ onBack }) {
                 <input
                   key={i}
                   type="text"
+                  inputMode="numeric"
+                  pattern="[0-9]*"
                   maxLength={1}
                   className="digit-input"
                   value={inputCode[i] || ""}
@@ -270,6 +272,8 @@ function OfflineGame({ onBack }) {
               <input
                 key={i}
                 type="text"
+                inputMode="numeric"
+                pattern="[0-9]*"
                 maxLength={1}
                 className="digit-input guess"
                 value={inputCode[i] || ""}
