@@ -9,16 +9,62 @@ import "./App.css";
 // Server URL: Use environment variable or fallback
 const SERVER_URL = import.meta.env.VITE_SERVER_URL || "http://localhost:3001";
 
+// LocalStorage keys
+const STORAGE_KEYS = {
+  SCREEN: "protocol4_screen",
+  GAME_DATA: "protocol4_gameData",
+};
+
 function App() {
+  // Initialize state from localStorage
+  const getInitialScreen = () => {
+    const saved = localStorage.getItem(STORAGE_KEYS.SCREEN);
+    // Only restore online/lobby screens - menu and offline don't need persistence
+    if (saved === "online" || saved === "lobby") {
+      return saved;
+    }
+    return "menu";
+  };
+
+  const getInitialGameData = () => {
+    const saved = localStorage.getItem(STORAGE_KEYS.GAME_DATA);
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch {
+        return null;
+      }
+    }
+    return null;
+  };
+
   // Navigation state: menu | lobby | online | offline
-  const [screen, setScreen] = useState("menu");
+  const [screen, setScreen] = useState(getInitialScreen);
   
   // Socket connection
   const socketRef = useRef(null);
   const [connected, setConnected] = useState(false);
   
   // Game data for online mode
-  const [gameData, setGameData] = useState(null);
+  const [gameData, setGameData] = useState(getInitialGameData);
+
+  // Persist screen state
+  useEffect(() => {
+    if (screen === "online" || screen === "lobby") {
+      localStorage.setItem(STORAGE_KEYS.SCREEN, screen);
+    } else {
+      localStorage.removeItem(STORAGE_KEYS.SCREEN);
+    }
+  }, [screen]);
+
+  // Persist game data
+  useEffect(() => {
+    if (gameData) {
+      localStorage.setItem(STORAGE_KEYS.GAME_DATA, JSON.stringify(gameData));
+    } else {
+      localStorage.removeItem(STORAGE_KEYS.GAME_DATA);
+    }
+  }, [gameData]);
 
   // Initialize socket connection when needed
   useEffect(() => {
@@ -69,7 +115,7 @@ function App() {
     setScreen("online");
   };
 
-  // Handle back to menu
+  // Handle back to menu - clears all stored data
   const handleBack = () => {
     if (socketRef.current) {
       socketRef.current.disconnect();
@@ -77,6 +123,10 @@ function App() {
     }
     setGameData(null);
     setScreen("menu");
+    // Clear all game-related localStorage
+    localStorage.removeItem(STORAGE_KEYS.SCREEN);
+    localStorage.removeItem(STORAGE_KEYS.GAME_DATA);
+    localStorage.removeItem("protocol4_gameState");
   };
 
   // Render current screen

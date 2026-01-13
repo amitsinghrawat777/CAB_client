@@ -1,33 +1,117 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./OnlineGame.css";
 
+// LocalStorage key for game state
+const GAME_STATE_KEY = "protocol4_gameState";
+
 function OnlineGame({ socket, gameData, onBack }) {
   const { roomCode, role, gameMode, timeLimit } = gameData;
   
+  // Load saved state from localStorage
+  const getSavedState = () => {
+    try {
+      const saved = localStorage.getItem(GAME_STATE_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        // Only restore if it's for the same room
+        if (parsed.roomCode === roomCode) {
+          return parsed;
+        }
+      }
+    } catch (e) {
+      console.error("Error loading saved state:", e);
+    }
+    return null;
+  };
+
+  const savedState = getSavedState();
+  
   // Game phases: setup | playing | gameover
-  const [phase, setPhase] = useState("setup");
+  const [phase, setPhase] = useState(savedState?.phase || "setup");
   
   // Secret code
-  const [secret, setSecret] = useState("");
-  const [secretLocked, setSecretLocked] = useState(false);
-  const [opponentReady, setOpponentReady] = useState(false);
+  const [secret, setSecret] = useState(savedState?.secret || "");
+  const [secretLocked, setSecretLocked] = useState(savedState?.secretLocked || false);
+  const [opponentReady, setOpponentReady] = useState(savedState?.opponentReady || false);
   
   // Guessing
   const [guess, setGuess] = useState("");
-  const [attackLog, setAttackLog] = useState([]);
-  const [defenseLog, setDefenseLog] = useState([]);
+  const [attackLog, setAttackLog] = useState(savedState?.attackLog || []);
+  const [defenseLog, setDefenseLog] = useState(savedState?.defenseLog || []);
   
   // Timer (for Blitz mode)
-  const [timeLeft, setTimeLeft] = useState(timeLimit || 300);
+  const [timeLeft, setTimeLeft] = useState(savedState?.timeLeft || timeLimit || 300);
   
   // Chat
-  const [chatMessages, setChatMessages] = useState([]);
+  const [chatMessages, setChatMessages] = useState(savedState?.chatMessages || []);
   const [chatInput, setChatInput] = useState("");
   const [chatOpen, setChatOpen] = useState(false);
   const chatRef = useRef(null);
   
   // Game result
-  const [gameResult, setGameResult] = useState(null);
+  const [gameResult, setGameResult] = useState(savedState?.gameResult || null);
+
+  // Save state to localStorage whenever important state changes
+  useEffect(() => {
+    const stateToSave = {
+      roomCode,
+      phase,
+      secret,
+      secretLocked,
+      opponentReady,
+      attackLog,
+      defenseLog,
+      timeLeft,
+      chatMessages,
+      gameResult,
+    };
+    localStorage.setItem(GAME_STATE_KEY, JSON.stringify(stateToSave));
+  }, [roomCode, phase, secret, secretLocked, opponentReady, attackLog, defenseLog, timeLeft, chatMessages, gameResult]);
+
+  // Rejoin room on reconnect
+  useEffect(() => {
+    if (!socket) return;
+
+    const handleConnect = () => {
+      console.log("Reconnected, rejoining room...");
+      // Rejoin the room with saved state
+      socket.emit("rejoin_room", {
+        roomCode,
+        role,
+        secret: secretLocked ? secret : null,
+        phase,
+      });
+    };
+
+    // If already connected and we have saved state, rejoin
+    if (socket.connected && savedState) {
+      handleConnect();
+    }
+
+    socket.on("connect", handleConnect);
+
+    // Handle rejoin response
+    socket.on("rejoin_success", (data) => {
+      console.log("Rejoin successful:", data);
+      if (data.phase) setPhase(data.phase);
+      if (data.opponentReady !== undefined) setOpponentReady(data.opponentReady);
+      if (data.timeRemaining !== undefined) setTimeLeft(data.timeRemaining);
+    });
+
+    socket.on("rejoin_failed", (data) => {
+      console.error("Rejoin failed:", data.error);
+      // Clear saved state and go back to menu
+      localStorage.removeItem(GAME_STATE_KEY);
+      alert("Failed to rejoin game: " + data.error);
+      onBack();
+    });
+
+    return () => {
+      socket.off("connect", handleConnect);
+      socket.off("rejoin_success");
+      socket.off("rejoin_failed");
+    };
+  }, [socket, roomCode, role, secret, secretLocked, phase, savedState, onBack]);
 
   useEffect(() => {
     if (!socket) return;
@@ -64,12 +148,31 @@ function OnlineGame({ socket, gameData, onBack }) {
         opponentCode,
         isWinner: data.winner === role
       });
+      // Clear saved state on game over
+      localStorage.removeItem(GAME_STATE_KEY);
     });
 
     socket.on("chat_message", (data) => {
       setChatMessages((prev) => [...prev, data]);
     });
 
+    // Opponent temporarily disconnected - may reconnect
+    socket.on("opponent_disconnected_temp", () => {
+      setChatMessages((prev) => [
+        ...prev,
+        { sender: "SYSTEM", message: "⚠️ Opponent disconnected. Waiting 30s for reconnection..." }
+      ]);
+    });
+
+    // Opponent reconnected
+    socket.on("opponent_reconnected", () => {
+      setChatMessages((prev) => [
+        ...prev,
+        { sender: "SYSTEM", message: "✅ Opponent reconnected!" }
+      ]);
+    });
+
+    // Opponent permanently disconnected
     socket.on("opponent_disconnected", () => {
       setGameResult({
         winner: role,
@@ -78,6 +181,19 @@ function OnlineGame({ socket, gameData, onBack }) {
         winningGuess: null
       });
       setPhase("gameover");
+      localStorage.removeItem(GAME_STATE_KEY);
+    });
+
+    // Opponent left intentionally
+    socket.on("opponent_left", () => {
+      setGameResult({
+        winner: role,
+        reason: "disconnect",
+        opponentCode: "????",
+        winningGuess: null
+      });
+      setPhase("gameover");
+      localStorage.removeItem(GAME_STATE_KEY);
     });
 
     return () => {
@@ -88,7 +204,10 @@ function OnlineGame({ socket, gameData, onBack }) {
       socket.off("timer_update");
       socket.off("game_over");
       socket.off("chat_message");
+      socket.off("opponent_disconnected_temp");
+      socket.off("opponent_reconnected");
       socket.off("opponent_disconnected");
+      socket.off("opponent_left");
     };
   }, [socket, role]);
 
@@ -252,9 +371,9 @@ function OnlineGame({ socket, gameData, onBack }) {
               <span className="detail-label">YOUR CODE:</span>
               <span className="detail-value">{secret}</span>
             </div>
-            <div className="detail-row">
+            <div className="detail-row opponent-code">
               <span className="detail-label">OPPONENT CODE:</span>
-              <span className="detail-value">{gameResult.opponentCode}</span>
+              <span className="detail-value">{gameResult.opponentCode || "????"}</span>
             </div>
             {gameResult.winningGuess && (
               <div className="detail-row">
@@ -420,8 +539,19 @@ function OnlineGame({ socket, gameData, onBack }) {
             </div>
             <div className="chat-messages" ref={chatRef}>
               {chatMessages.map((msg, i) => (
-                <div key={i} className={`chat-msg ${msg.sender === role ? "mine" : "theirs"}`}>
-                  <span className="msg-sender">{msg.sender === role ? "You" : "Opponent"}</span>
+                <div 
+                  key={i} 
+                  className={`chat-msg ${
+                    msg.sender === "SYSTEM" 
+                      ? "system" 
+                      : msg.sender === role 
+                        ? "mine" 
+                        : "theirs"
+                  }`}
+                >
+                  {msg.sender !== "SYSTEM" && (
+                    <span className="msg-sender">{msg.sender === role ? "You" : "Opponent"}</span>
+                  )}
                   <span className="msg-text">{msg.message}</span>
                 </div>
               ))}

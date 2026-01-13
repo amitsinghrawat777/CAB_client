@@ -378,98 +378,165 @@
 
 /* ==================== ENHANCED RESPONSIVE - PC OPTIMIZATIONS ==================== */
 @media (min-width: 1200px) {
+  .lobby {
+    min-height: 100vh;
+  }
+
   .lobby-container {
-    max-width: 600px;
+    max-width: 700px;
+    padding: 60px;
   }
 
   .back-btn {
-    top: -80px;
-    font-size: 1rem;
+    top: -90px;
+    font-size: 1.1rem;
+    padding: 12px 25px;
   }
 
   .lobby-header h1 {
-    font-size: 3rem;
-    letter-spacing: 6px;
+    font-size: 3.5rem;
+    letter-spacing: 8px;
   }
 
   .lobby-header .subtitle {
-    font-size: 1.2rem;
-    margin-top: 15px;
+    font-size: 1.3rem;
+    margin-top: 20px;
   }
 
   .lobby-options {
-    gap: 20px;
+    gap: 25px;
   }
 
   .lobby-option {
-    padding: 35px;
-    border-radius: 12px;
+    padding: 40px;
+    border-radius: 16px;
+    background: rgba(10, 10, 20, 0.8);
   }
 
   .lobby-option:hover {
-    transform: translateX(10px);
+    transform: translateX(12px);
+    box-shadow: 0 0 40px rgba(0, 255, 136, 0.15);
   }
 
   .option-icon {
-    width: 60px;
-    height: 60px;
-    font-size: 2.5rem;
-    border-radius: 12px;
+    width: 70px;
+    height: 70px;
+    font-size: 2.8rem;
+    border-radius: 14px;
   }
 
   .option-title {
-    font-size: 1.4rem;
-    letter-spacing: 3px;
+    font-size: 1.6rem;
+    letter-spacing: 4px;
   }
 
   .option-desc {
-    font-size: 1rem;
+    font-size: 1.1rem;
   }
 
   .mode-selection {
-    gap: 25px;
-    margin-bottom: 40px;
+    gap: 30px;
+    margin-bottom: 50px;
   }
 
   .mode-btn {
-    padding: 35px 30px;
-    border-radius: 12px;
+    padding: 40px 35px;
+    border-radius: 16px;
+  }
+
+  .mode-btn.active {
+    box-shadow: 0 0 40px rgba(0, 255, 136, 0.3);
   }
 
   .mode-icon {
-    font-size: 2.5rem;
+    font-size: 3rem;
   }
 
   .mode-name {
-    font-size: 1.2rem;
+    font-size: 1.4rem;
   }
 
   .mode-desc {
-    font-size: 0.95rem;
+    font-size: 1rem;
   }
 
   .action-btn {
-    padding: 20px 50px;
-    font-size: 1.1rem;
-    border-radius: 10px;
-  }
-
-  .code-box {
-    gap: 15px;
-  }
-
-  .code-char {
-    width: 80px;
-    height: 100px;
-    font-size: 3rem;
+    padding: 22px 60px;
+    font-size: 1.2rem;
     border-radius: 12px;
   }
 
+  .code-box {
+    gap: 20px;
+  }
+
+  .code-char {
+    width: 90px;
+    height: 110px;
+    font-size: 3.5rem;
+    border-radius: 14px;
+  }
+
   .code-input {
+    width: 90px;
+    height: 100px;
+    font-size: 2.8rem;
+    border-radius: 12px;
+  }
+
+  .room-code-display {
+    margin: 40px 0;
+  }
+}
+
+/* Large Desktop / Ultra-wide */
+@media (min-width: 1600px) {
+  .lobby-container {
+    max-width: 800px;
+    padding: 80px;
+  }
+
+  .lobby-header h1 {
+    font-size: 4rem;
+    letter-spacing: 10px;
+  }
+
+  .lobby-header .subtitle {
+    font-size: 1.5rem;
+  }
+
+  .lobby-option {
+    padding: 45px;
+  }
+
+  .option-icon {
     width: 80px;
-    height: 90px;
-    font-size: 2.5rem;
-    border-radius: 10px;
+    height: 80px;
+    font-size: 3rem;
+  }
+
+  .option-title {
+    font-size: 1.8rem;
+  }
+
+  .mode-btn {
+    padding: 45px 40px;
+  }
+
+  .mode-icon {
+    font-size: 3.5rem;
+  }
+
+  .code-char {
+    width: 100px;
+    height: 120px;
+    font-size: 4rem;
+  }
+
+  .code-input {
+    width: 100px;
+    height: 110px;
+    font-size: 3rem;
   }
 }
 

@@ -563,6 +563,16 @@
   border: 1px solid rgba(0, 136, 255, 0.3);
 }
 
+.chat-msg.system {
+  align-self: center;
+  background: rgba(255, 165, 0, 0.1);
+  border: 1px solid rgba(255, 165, 0, 0.3);
+  max-width: 95%;
+  text-align: center;
+  font-size: 0.75rem;
+  color: #ffa500;
+}
+
 .msg-sender {
   display: block;
   font-family: 'Courier New', monospace;
@@ -693,6 +703,33 @@
 
 .detail-value.highlight {
   color: #00ff88;
+}
+
+/* Special styling for opponent code reveal */
+.detail-row.opponent-code {
+  background: linear-gradient(135deg, rgba(255, 0, 128, 0.1), rgba(0, 136, 255, 0.1));
+  margin: 10px -10px;
+  padding: 15px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 0, 128, 0.3);
+}
+
+.detail-row.opponent-code .detail-value {
+  font-size: 1.3rem;
+  color: #ff0080;
+  text-shadow: 0 0 10px rgba(255, 0, 128, 0.5);
+  animation: codeReveal 0.5s ease-out;
+}
+
+@keyframes codeReveal {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .result-actions {
