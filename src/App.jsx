@@ -1,132 +1,318 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import io from "socket.io-client";
 import "./App.css";
 
-// CHANGE THIS URL WHEN DEPLOYING (Use "http://localhost:3001" for local dev)
-const socket = io.connect("https://cab-server-5ic9.onrender.com"); 
+// Server URL: Use environment variable or fallback
+const SERVER_URL = import.meta.env.VITE_SERVER_URL || "http://localhost:3001";
 
 function App() {
+  const socketRef = useRef(null);
+  
+  // Connection & Room State
   const [room, setRoom] = useState("");
   const [joined, setJoined] = useState(false);
   const [role, setRole] = useState("");
-  const [status, setStatus] = useState("Waiting for opponent...");
+  const [gamePhase, setGamePhase] = useState("lobby"); // lobby | setup | playing | gameover
+  const [status, setStatus] = useState("Enter a Room ID to start");
   
   // Game State
   const [secret, setSecret] = useState("");
   const [secretLocked, setSecretLocked] = useState(false);
+  const [opponentReady, setOpponentReady] = useState(false);
   const [guess, setGuess] = useState("");
+  const [gameResult, setGameResult] = useState(null); // { winner, isWinner }
   
   // Notebook Logs
   const [defenseLog, setDefenseLog] = useState([]); // Opponent's guesses on me
   const [attackLog, setAttackLog] = useState([]);   // My guesses on opponent
 
+  // Initialize socket connection
   useEffect(() => {
-    socket.on("role_assigned", (r) => setRole(r));
+    socketRef.current = io.connect(SERVER_URL);
+    const socket = socketRef.current;
+
+    socket.on("connect", () => {
+      console.log("Connected to server:", socket.id);
+    });
+
+    socket.on("role_assigned", (r) => {
+      setRole(r);
+      if (r === "Player 1") {
+        setStatus("Waiting for opponent to join...");
+      }
+    });
     
-    socket.on("game_ready", () => setStatus("Game Start! Set your Secret Code."));
+    socket.on("game_ready", () => {
+      setGamePhase("setup");
+      setStatus("🎮 Game Start! Set your 4-digit secret code.");
+    });
     
     socket.on("opponent_set_secret", () => {
-        alert("Opponent has locked their code!");
+      setOpponentReady(true);
+    });
+
+    socket.on("both_ready", () => {
+      setGamePhase("playing");
+      setStatus("🔥 Both players ready! Start guessing!");
     });
 
     socket.on("guess_result", (data) => {
-        setAttackLog((prev) => [data, ...prev]);
+      setAttackLog((prev) => [data, ...prev]);
     });
 
     socket.on("opponent_guessed", (data) => {
-        setDefenseLog((prev) => [data, ...prev]);
+      setDefenseLog((prev) => [data, ...prev]);
     });
 
     socket.on("game_over", (data) => {
-        alert(data.winner === role ? "YOU WON! 🎉" : "YOU LOST! 💀");
-        window.location.reload();
+      setGamePhase("gameover");
+      setGameResult({
+        winner: data.winner,
+        isWinner: data.winner === role,
+        opponentCode: data.opponentCode,
+        winningGuess: data.winningGuess
+      });
     });
 
-  }, [socket, role]);
+    socket.on("room_full", () => {
+      alert("This room is full! Try another room.");
+      setJoined(false);
+    });
+
+    socket.on("opponent_disconnected", () => {
+      setStatus("⚠️ Opponent disconnected!");
+      setGamePhase("lobby");
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, [role]);
+
+  // Validate input: 4 unique digits
+  const validateCode = (code) => {
+    if (!/^\d{4}$/.test(code)) return { valid: false, error: "Must be exactly 4 digits" };
+    const uniqueDigits = new Set(code.split(""));
+    if (uniqueDigits.size !== 4) return { valid: false, error: "All 4 digits must be unique" };
+    return { valid: true };
+  };
 
   const joinRoom = () => {
-    if (room !== "") {
-      socket.emit("join_room", room);
-      setJoined(true);
-    }
+    if (room.trim() === "") return alert("Please enter a Room ID");
+    socketRef.current.emit("join_room", room.trim());
+    setJoined(true);
   };
 
   const lockSecret = () => {
-    if (secret.length !== 4) return alert("Must be 4 digits");
-    socket.emit("set_secret", { room, code: secret, role });
+    const validation = validateCode(secret);
+    if (!validation.valid) return alert(validation.error);
+    
+    socketRef.current.emit("set_secret", { room, code: secret, role });
     setSecretLocked(true);
-    setStatus("Code Locked. Start Guessing!");
+    setStatus(opponentReady ? "🔥 Both ready! Start guessing!" : "✅ Code Locked. Waiting for opponent...");
   };
 
   const sendGuess = () => {
-    if (guess.length !== 4) return alert("Must be 4 digits");
-    socket.emit("send_guess", { room, guess, role });
+    const validation = validateCode(guess);
+    if (!validation.valid) return alert(validation.error);
+    
+    socketRef.current.emit("send_guess", { room, guess, role });
     setGuess("");
   };
 
-  // RENDER SETUP SCREEN
+  const handleKeyPress = (e, action) => {
+    if (e.key === "Enter") action();
+  };
+
+  const playAgain = () => {
+    window.location.reload();
+  };
+
+  // ==================== RENDER SCREENS ====================
+
+  // LOBBY SCREEN
   if (!joined) {
     return (
-      <div className="App setup">
-        <h1>Cows & Bulls Online</h1>
-        <input placeholder="Room ID (e.g. room1)" onChange={(e) => setRoom(e.target.value)} />
-        <button onClick={joinRoom}>Join Game</button>
+      <div className="App lobby">
+        <div className="logo">
+          <span className="cow">🐄</span>
+          <span className="bull">🐂</span>
+        </div>
+        <h1>Cows & Bulls</h1>
+        <p className="subtitle">Real-Time Multiplayer</p>
+        
+        <div className="join-form">
+          <input 
+            placeholder="Enter Room ID (e.g. Matrix)" 
+            value={room}
+            onChange={(e) => setRoom(e.target.value)}
+            onKeyPress={(e) => handleKeyPress(e, joinRoom)}
+          />
+          <button onClick={joinRoom} className="btn-primary">Join Game</button>
+        </div>
+        
+        <div className="rules">
+          <h3>How to Play</h3>
+          <p>1. Both players set a secret 4-digit code (unique digits)</p>
+          <p>2. Take turns guessing your opponent's code</p>
+          <p>3. <strong>+N</strong> = N digits exist (Cows)</p>
+          <p>4. <strong>-N</strong> = N digits in correct position (Bulls)</p>
+          <p>5. First to get <strong>-4</strong> wins!</p>
+        </div>
       </div>
     );
   }
 
-  // RENDER GAME SCREEN
+  // GAME OVER SCREEN
+  if (gamePhase === "gameover" && gameResult) {
+    return (
+      <div className="App gameover">
+        <div className={`result-banner ${gameResult.isWinner ? "winner" : "loser"}`}>
+          <h1>{gameResult.isWinner ? "🎉 YOU WON! 🎉" : "💀 YOU LOST 💀"}</h1>
+          <p>{gameResult.isWinner ? "Congratulations!" : "Better luck next time!"}</p>
+        </div>
+        
+        <div className="game-summary">
+          <div className="summary-item">
+            <span className="label">Your Secret:</span>
+            <span className="code">{secret}</span>
+          </div>
+          <div className="summary-item">
+            <span className="label">Opponent's Secret:</span>
+            <span className="code">{gameResult.opponentCode}</span>
+          </div>
+          <div className="summary-item">
+            <span className="label">Winning Guess:</span>
+            <span className="code highlight">{gameResult.winningGuess}</span>
+          </div>
+          <div className="summary-item">
+            <span className="label">Your Attempts:</span>
+            <span className="count">{attackLog.length}</span>
+          </div>
+        </div>
+        
+        <button onClick={playAgain} className="btn-primary">Play Again</button>
+      </div>
+    );
+  }
+
+  // GAME SCREEN
   return (
     <div className="App game">
       <div className="header">
-        <h2>Room: {room} | You are {role}</h2>
-        <p>{status}</p>
+        <div className="room-info">
+          <span className="room-label">Room:</span>
+          <span className="room-id">{room}</span>
+        </div>
+        <div className="role-badge" data-role={role}>
+          {role}
+        </div>
+        <p className="status">{status}</p>
       </div>
 
       {/* SECRET CODE SECTION */}
-      {!secretLocked ? (
-        <div className="secret-section">
-          <input type="password" placeholder="Set Secret (4 digits)" onChange={(e) => setSecret(e.target.value)} />
-          <button onClick={lockSecret}>Lock</button>
+      <div className="secret-section">
+        {!secretLocked ? (
+          <div className="secret-input">
+            <input 
+              type="text"
+              maxLength={4}
+              placeholder="Your 4-digit code" 
+              value={secret}
+              onChange={(e) => setSecret(e.target.value.replace(/\D/g, ""))}
+              onKeyPress={(e) => handleKeyPress(e, lockSecret)}
+              disabled={gamePhase !== "setup"}
+            />
+            <button 
+              onClick={lockSecret} 
+              className="btn-lock"
+              disabled={gamePhase !== "setup"}
+            >
+              🔒 Lock Code
+            </button>
+          </div>
+        ) : (
+          <div className="secret-locked">
+            <span className="secret-display">{secret.split("").join(" ")}</span>
+            <span className="lock-icon">🔒</span>
+          </div>
+        )}
+        
+        {/* Opponent Ready Indicator */}
+        <div className={`opponent-status ${opponentReady ? "ready" : ""}`}>
+          {opponentReady ? "✅ Opponent Ready" : "⏳ Waiting for opponent..."}
         </div>
-      ) : (
-        <div className="secret-display">My Secret: {secret}</div>
-      )}
+      </div>
 
       {/* NOTEBOOK SPLIT VIEW */}
       <div className="notebook">
         {/* LEFT: DEFENSE */}
         <div className="column defense">
-          <h3>MY NUMBER (Defense)</h3>
+          <div className="column-header">
+            <h3>🛡️ DEFENSE</h3>
+            <span className="column-subtitle">Opponent's guesses on your code</span>
+          </div>
           <div className="logs">
-            {defenseLog.map((log, i) => (
-              <div key={i} className="log-row">
-                <span>{log.guess}</span>
-                <span className="score">+{log.plus} -{log.minus}</span>
-              </div>
-            ))}
+            {defenseLog.length === 0 ? (
+              <div className="empty-log">No guesses yet...</div>
+            ) : (
+              defenseLog.map((log, i) => (
+                <div key={i} className="log-row defense-row">
+                  <span className="attempt-num">#{defenseLog.length - i}</span>
+                  <span className="guess-code">{log.guess}</span>
+                  <div className="score">
+                    <span className="cows">+{log.plus}</span>
+                    <span className="bulls">-{log.minus}</span>
+                  </div>
+                </div>
+              ))
+            )}
           </div>
         </div>
 
+        {/* DIVIDER */}
+        <div className="notebook-divider"></div>
+
         {/* RIGHT: ATTACK */}
         <div className="column attack">
-          <h3>GUESSING (Attack)</h3>
+          <div className="column-header">
+            <h3>⚔️ ATTACK</h3>
+            <span className="column-subtitle">Your guesses on opponent's code</span>
+          </div>
+          
           <div className="input-area">
             <input 
-                value={guess} 
-                onChange={(e) => setGuess(e.target.value)} 
-                placeholder="Guess..." 
-                disabled={!secretLocked}
+              value={guess} 
+              maxLength={4}
+              onChange={(e) => setGuess(e.target.value.replace(/\D/g, ""))} 
+              onKeyPress={(e) => handleKeyPress(e, sendGuess)}
+              placeholder="Enter guess..." 
+              disabled={gamePhase !== "playing"}
             />
-            <button onClick={sendGuess} disabled={!secretLocked}>Go</button>
+            <button 
+              onClick={sendGuess} 
+              className="btn-guess"
+              disabled={gamePhase !== "playing"}
+            >
+              Guess!
+            </button>
           </div>
+          
           <div className="logs">
-            {attackLog.map((log, i) => (
-              <div key={i} className="log-row">
-                <span>{log.guess}</span>
-                <span className="score">+{log.plus} -{log.minus}</span>
-              </div>
-            ))}
+            {attackLog.length === 0 ? (
+              <div className="empty-log">Make your first guess!</div>
+            ) : (
+              attackLog.map((log, i) => (
+                <div key={i} className="log-row attack-row">
+                  <span className="attempt-num">#{attackLog.length - i}</span>
+                  <span className="guess-code">{log.guess}</span>
+                  <div className="score">
+                    <span className="cows">+{log.plus}</span>
+                    <span className="bulls">-{log.minus}</span>
+                  </div>
+                </div>
+              ))
+            )}
           </div>
         </div>
       </div>
