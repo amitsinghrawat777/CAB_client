@@ -501,9 +501,14 @@ button:disabled {
   color: #facc15;
 }
 
-/* ==================== RESPONSIVE ==================== */
+/* ==================== RESPONSIVE - TABLET ==================== */
 @media (max-width: 768px) {
-  .lobby h1 { font-size: 2rem; }
+  .App {
+    padding: 15px;
+  }
+
+  /* LOBBY */
+  .lobby h1 { font-size: 2.2rem; }
   .logo { font-size: 3rem; }
   
   .join-form {
@@ -515,16 +520,62 @@ button:disabled {
   .join-form input {
     width: 100%;
   }
+
+  .rules {
+    padding: 15px 20px;
+  }
   
+  /* HEADER */
+  .header {
+    margin-bottom: 10px;
+  }
+
+  .room-info, .role-badge {
+    display: block;
+    margin: 5px auto;
+    width: fit-content;
+  }
+
+  .room-info {
+    margin-right: auto;
+  }
+
+  .status {
+    font-size: 1rem;
+  }
+
+  /* SECRET SECTION */
+  .secret-input {
+    flex-direction: column;
+    width: 100%;
+    max-width: 280px;
+  }
+
+  .secret-input input {
+    width: 100%;
+  }
+
+  .secret-locked {
+    padding: 12px 20px;
+  }
+
+  .secret-display {
+    font-size: 1.6rem;
+    letter-spacing: 10px;
+  }
+
+  /* NOTEBOOK */
   .notebook {
     flex-direction: column;
     height: auto;
-    min-height: 600px;
+    max-height: none;
+    min-height: auto;
   }
   
   .notebook-divider {
     width: 100%;
     height: 4px;
+    flex-shrink: 0;
   }
   
   .notebook-divider::before {
@@ -533,24 +584,402 @@ button:disabled {
   }
   
   .column {
-    min-height: 250px;
+    min-height: 280px;
+    max-height: 350px;
+    padding: 15px;
   }
-  
-  .room-info, .role-badge {
-    display: block;
-    margin: 5px auto;
+
+  .column-header h3 {
+    font-size: 1.1rem;
+  }
+
+  .column-subtitle {
+    font-size: 0.75rem;
+  }
+
+  /* LOGS */
+  .log-row {
+    padding: 10px 12px;
   }
   
   .guess-code {
     font-size: 1.2rem;
     letter-spacing: 3px;
   }
-  
+
+  .attempt-num {
+    margin-right: 10px;
+    min-width: 20px;
+  }
+
+  .score {
+    gap: 8px;
+  }
+
+  .cows, .bulls {
+    font-size: 1rem;
+  }
+
+  /* INPUT AREA */
+  .input-area {
+    gap: 8px;
+  }
+
+  .input-area input {
+    font-size: 1.1rem;
+    letter-spacing: 3px;
+    padding: 10px 12px;
+  }
+
+  .btn-guess {
+    min-width: 70px;
+    padding: 10px 16px;
+  }
+
+  /* GAME OVER */
   .result-banner {
-    padding: 30px;
+    padding: 25px 20px;
   }
   
   .result-banner h1 {
-    font-size: 1.8rem;
+    font-size: 1.6rem;
+  }
+
+  .result-banner p {
+    font-size: 1rem;
+  }
+
+  .game-summary {
+    padding: 20px;
+    width: 100%;
+    max-width: 350px;
+  }
+
+  .summary-item {
+    padding: 10px 0;
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+
+  .summary-item .code {
+    font-size: 1.1rem;
+    letter-spacing: 3px;
+  }
+}
+
+/* ==================== RESPONSIVE - MOBILE ==================== */
+@media (max-width: 480px) {
+  .App {
+    padding: 10px;
+  }
+
+  /* LOBBY */
+  .lobby h1 { font-size: 1.8rem; }
+  .logo { font-size: 2.5rem; }
+  
+  .subtitle {
+    font-size: 1rem;
+    margin-bottom: 20px;
+  }
+
+  .join-form {
+    max-width: 100%;
+    padding: 0 10px;
+  }
+
+  .join-form input {
+    font-size: 1rem;
+    padding: 12px 14px;
+  }
+
+  .rules {
+    max-width: 100%;
+    margin: 0 10px;
+    padding: 15px;
+  }
+
+  .rules h3 {
+    font-size: 1rem;
+  }
+
+  .rules p {
+    font-size: 0.9rem;
+    margin: 6px 0;
+  }
+
+  /* HEADER */
+  .room-info {
+    padding: 6px 12px;
+    font-size: 0.9rem;
+  }
+
+  .role-badge {
+    padding: 6px 12px;
+    font-size: 0.8rem;
+  }
+
+  .status {
+    font-size: 0.9rem;
+    padding: 0 10px;
+  }
+
+  /* SECRET SECTION */
+  .secret-section {
+    width: 100%;
+    padding: 0 5px;
+  }
+
+  .secret-input {
+    max-width: 100%;
+    padding: 0 10px;
+  }
+
+  .secret-input input {
+    font-size: 1.2rem;
+    letter-spacing: 6px;
+    padding: 12px;
+  }
+
+  .btn-lock {
+    padding: 12px 20px;
+    font-size: 0.95rem;
+  }
+
+  .secret-locked {
+    padding: 10px 15px;
+    gap: 10px;
+  }
+
+  .secret-display {
+    font-size: 1.4rem;
+    letter-spacing: 8px;
+  }
+
+  .lock-icon {
+    font-size: 1.2rem;
+  }
+
+  .opponent-status {
+    font-size: 0.85rem;
+    padding: 6px 12px;
+  }
+
+  /* NOTEBOOK */
+  .notebook {
+    border-radius: 12px;
+    margin: 0 -5px;
+    width: calc(100% + 10px);
+  }
+
+  .column {
+    min-height: 240px;
+    max-height: 300px;
+    padding: 12px;
+  }
+
+  .column-header {
+    margin-bottom: 10px;
+  }
+
+  .column-header h3 {
+    font-size: 1rem;
+  }
+
+  .column-subtitle {
+    font-size: 0.7rem;
+  }
+
+  /* LOGS */
+  .logs {
+    padding: 8px;
+  }
+
+  .empty-log {
+    padding: 30px 15px;
+    font-size: 0.9rem;
+  }
+
+  .log-row {
+    padding: 8px 10px;
+    margin-bottom: 6px;
+  }
+
+  .attempt-num {
+    font-size: 0.7rem;
+    margin-right: 8px;
+    min-width: 18px;
+  }
+
+  .guess-code {
+    font-size: 1.1rem;
+    letter-spacing: 2px;
+  }
+
+  .cows, .bulls {
+    font-size: 0.95rem;
+  }
+
+  .score {
+    gap: 6px;
+  }
+
+  /* INPUT AREA */
+  .input-area {
+    gap: 6px;
+  }
+
+  .input-area input {
+    font-size: 1rem;
+    letter-spacing: 2px;
+    padding: 10px 8px;
+  }
+
+  .btn-guess {
+    min-width: 60px;
+    padding: 10px 12px;
+    font-size: 0.9rem;
+  }
+
+  /* GAME OVER */
+  .gameover {
+    padding: 15px;
+  }
+
+  .result-banner {
+    padding: 20px 15px;
+    border-radius: 16px;
+    margin-bottom: 20px;
+    width: 100%;
+  }
+
+  .result-banner h1 {
+    font-size: 1.4rem;
+  }
+
+  .result-banner p {
+    font-size: 0.9rem;
+  }
+
+  .game-summary {
+    padding: 15px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    width: 100%;
+  }
+
+  .summary-item {
+    padding: 8px 0;
+  }
+
+  .summary-item .label {
+    font-size: 0.9rem;
+  }
+
+  .summary-item .code {
+    font-size: 1rem;
+    letter-spacing: 2px;
+  }
+
+  .summary-item .count {
+    font-size: 1rem;
+  }
+
+  .btn-primary {
+    padding: 12px 30px;
+    font-size: 1rem;
+  }
+}
+
+/* ==================== TOUCH OPTIMIZATIONS ==================== */
+@media (hover: none) and (pointer: coarse) {
+  /* Larger touch targets for mobile */
+  button {
+    min-height: 48px;
+    min-width: 48px;
+  }
+
+  input {
+    min-height: 48px;
+  }
+
+  .log-row {
+    min-height: 44px;
+  }
+
+  /* Remove hover effects on touch devices */
+  .btn-primary:hover:not(:disabled),
+  .btn-lock:hover:not(:disabled),
+  .btn-guess:hover:not(:disabled) {
+    transform: none;
+  }
+
+  /* Add active state for touch feedback */
+  .btn-primary:active:not(:disabled),
+  .btn-lock:active:not(:disabled),
+  .btn-guess:active:not(:disabled) {
+    transform: scale(0.98);
+    opacity: 0.9;
+  }
+}
+
+/* ==================== LANDSCAPE MOBILE ==================== */
+@media (max-height: 500px) and (orientation: landscape) {
+  .App {
+    padding: 10px;
+  }
+
+  .lobby {
+    justify-content: flex-start;
+    padding-top: 20px;
+  }
+
+  .logo {
+    font-size: 2rem;
+    margin-bottom: 5px;
+  }
+
+  .lobby h1 {
+    font-size: 1.5rem;
+  }
+
+  .subtitle {
+    margin-bottom: 15px;
+    font-size: 0.9rem;
+  }
+
+  .rules {
+    display: none; /* Hide rules in landscape to save space */
+  }
+
+  .header {
+    margin-bottom: 8px;
+  }
+
+  .secret-section {
+    margin-bottom: 10px;
+  }
+
+  .notebook {
+    flex-direction: row;
+    max-height: calc(100vh - 150px);
+  }
+
+  .notebook-divider {
+    width: 4px;
+    height: auto;
+  }
+
+  .column {
+    min-height: auto;
+    max-height: none;
+  }
+}
+
+/* ==================== SAFE AREA (NOTCHED PHONES) ==================== */
+@supports (padding: env(safe-area-inset-bottom)) {
+  .App {
+    padding-bottom: calc(20px + env(safe-area-inset-bottom));
+    padding-left: calc(10px + env(safe-area-inset-left));
+    padding-right: calc(10px + env(safe-area-inset-right));
   }
 }
