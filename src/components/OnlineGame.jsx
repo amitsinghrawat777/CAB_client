@@ -57,7 +57,13 @@ function OnlineGame({ socket, gameData, onBack }) {
 
     socket.on("game_over", (data) => {
       setPhase("gameover");
-      setGameResult(data);
+      // Compute opponent's code based on our role
+      const opponentCode = role === "Player 1" ? data.p2Secret : data.p1Secret;
+      setGameResult({
+        ...data,
+        opponentCode,
+        isWinner: data.winner === role
+      });
     });
 
     socket.on("chat_message", (data) => {

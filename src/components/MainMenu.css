@@ -387,3 +387,184 @@
     font-size: 0.8rem;
   }
 }
+
+/* ==================== ENHANCED RESPONSIVE - PC OPTIMIZATIONS ==================== */
+@media (min-width: 1200px) {
+  .main-menu {
+    background: radial-gradient(ellipse at center, #0a0a0f 0%, #050508 100%);
+  }
+
+  .menu-content {
+    max-width: 600px;
+    padding: 60px;
+  }
+
+  .title {
+    font-size: 4.5rem;
+    letter-spacing: 12px;
+  }
+
+  .logo-icon {
+    font-size: 2.5rem;
+  }
+
+  .subtitle {
+    font-size: 1.3rem;
+    margin-top: 20px;
+  }
+
+  .logo-section {
+    margin-bottom: 70px;
+  }
+
+  .menu-buttons {
+    gap: 20px;
+  }
+
+  .menu-btn {
+    padding: 25px 35px;
+    border-radius: 12px;
+  }
+
+  .menu-btn:hover {
+    transform: translateX(10px) scale(1.02);
+  }
+
+  .btn-icon {
+    font-size: 2.5rem;
+    width: 70px;
+  }
+
+  .btn-title {
+    font-size: 1.4rem;
+    letter-spacing: 4px;
+  }
+
+  .btn-desc {
+    font-size: 0.95rem;
+  }
+
+  .rules-section {
+    margin-top: 60px;
+    padding: 30px;
+    border-radius: 16px;
+  }
+
+  .rules-header {
+    font-size: 1rem;
+  }
+
+  .rules-content {
+    font-size: 0.95rem;
+    line-height: 1.8;
+  }
+}
+
+/* Tablet */
+@media (min-width: 768px) and (max-width: 1199px) {
+  .menu-content {
+    max-width: 550px;
+    padding: 50px;
+  }
+
+  .title {
+    font-size: 3.2rem;
+    letter-spacing: 6px;
+  }
+
+  .menu-btn {
+    padding: 22px 28px;
+  }
+}
+
+/* ==================== MOBILE OPTIMIZATIONS ==================== */
+@media (max-width: 380px) {
+  .title {
+    font-size: 1.8rem;
+    letter-spacing: 3px;
+  }
+
+  .logo-icon {
+    font-size: 1.2rem;
+  }
+
+  .menu-content {
+    padding: 15px;
+  }
+
+  .menu-btn {
+    padding: 12px 14px;
+    gap: 12px;
+  }
+
+  .btn-icon {
+    width: 35px;
+    font-size: 1.3rem;
+  }
+
+  .btn-title {
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+  }
+
+  .btn-desc {
+    font-size: 0.7rem;
+  }
+
+  .rules-section {
+    padding: 12px;
+  }
+}
+
+/* Landscape Mobile */
+@media (max-height: 500px) and (orientation: landscape) {
+  .main-menu {
+    padding: 10px 20px;
+  }
+
+  .logo-section {
+    margin-bottom: 20px;
+  }
+
+  .title {
+    font-size: 2rem;
+  }
+
+  .logo-icon {
+    display: none;
+  }
+
+  .subtitle {
+    display: none;
+  }
+
+  .menu-buttons {
+    flex-direction: row;
+    gap: 15px;
+  }
+
+  .menu-btn {
+    flex: 1;
+    padding: 15px 20px;
+  }
+
+  .rules-section {
+    display: none;
+  }
+}
+
+/* Touch optimizations */
+@media (hover: none) and (pointer: coarse) {
+  .menu-btn {
+    min-height: 70px;
+  }
+
+  .menu-btn:hover {
+    transform: none;
+  }
+
+  .menu-btn:active {
+    transform: scale(0.98);
+    background: rgba(0, 255, 136, 0.15);
+  }
+}

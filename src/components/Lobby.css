@@ -375,3 +375,246 @@
     font-size: 1.6rem;
   }
 }
+
+/* ==================== ENHANCED RESPONSIVE - PC OPTIMIZATIONS ==================== */
+@media (min-width: 1200px) {
+  .lobby-container {
+    max-width: 600px;
+  }
+
+  .back-btn {
+    top: -80px;
+    font-size: 1rem;
+  }
+
+  .lobby-header h1 {
+    font-size: 3rem;
+    letter-spacing: 6px;
+  }
+
+  .lobby-header .subtitle {
+    font-size: 1.2rem;
+    margin-top: 15px;
+  }
+
+  .lobby-options {
+    gap: 20px;
+  }
+
+  .lobby-option {
+    padding: 35px;
+    border-radius: 12px;
+  }
+
+  .lobby-option:hover {
+    transform: translateX(10px);
+  }
+
+  .option-icon {
+    width: 60px;
+    height: 60px;
+    font-size: 2.5rem;
+    border-radius: 12px;
+  }
+
+  .option-title {
+    font-size: 1.4rem;
+    letter-spacing: 3px;
+  }
+
+  .option-desc {
+    font-size: 1rem;
+  }
+
+  .mode-selection {
+    gap: 25px;
+    margin-bottom: 40px;
+  }
+
+  .mode-btn {
+    padding: 35px 30px;
+    border-radius: 12px;
+  }
+
+  .mode-icon {
+    font-size: 2.5rem;
+  }
+
+  .mode-name {
+    font-size: 1.2rem;
+  }
+
+  .mode-desc {
+    font-size: 0.95rem;
+  }
+
+  .action-btn {
+    padding: 20px 50px;
+    font-size: 1.1rem;
+    border-radius: 10px;
+  }
+
+  .code-box {
+    gap: 15px;
+  }
+
+  .code-char {
+    width: 80px;
+    height: 100px;
+    font-size: 3rem;
+    border-radius: 12px;
+  }
+
+  .code-input {
+    width: 80px;
+    height: 90px;
+    font-size: 2.5rem;
+    border-radius: 10px;
+  }
+}
+
+/* Tablet */
+@media (min-width: 768px) and (max-width: 1199px) {
+  .lobby-container {
+    max-width: 550px;
+  }
+
+  .lobby-header h1 {
+    font-size: 2.2rem;
+  }
+
+  .lobby-option {
+    padding: 28px;
+  }
+
+  .code-char, .code-input {
+    width: 65px;
+    height: 80px;
+    font-size: 2.2rem;
+  }
+}
+
+/* ==================== MOBILE OPTIMIZATIONS ==================== */
+@media (max-width: 380px) {
+  .lobby {
+    padding: 15px;
+  }
+
+  .lobby-header h1 {
+    font-size: 1.5rem;
+    letter-spacing: 2px;
+  }
+
+  .lobby-option {
+    padding: 15px;
+    gap: 15px;
+  }
+
+  .option-icon {
+    width: 35px;
+    height: 35px;
+    font-size: 1.2rem;
+  }
+
+  .option-title {
+    font-size: 0.9rem;
+  }
+
+  .option-desc {
+    font-size: 0.75rem;
+  }
+
+  .mode-btn {
+    padding: 18px 15px;
+  }
+
+  .mode-icon {
+    font-size: 1.5rem;
+  }
+
+  .code-char, .code-input {
+    width: 45px;
+    height: 55px;
+    font-size: 1.4rem;
+  }
+
+  .action-btn {
+    padding: 14px 25px;
+    font-size: 0.9rem;
+  }
+}
+
+/* Landscape Mobile */
+@media (max-height: 500px) and (orientation: landscape) {
+  .lobby {
+    padding: 10px 20px;
+    align-items: flex-start;
+  }
+
+  .lobby-container {
+    max-width: 100%;
+  }
+
+  .back-btn {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+  }
+
+  .lobby-header {
+    margin-bottom: 20px;
+  }
+
+  .lobby-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .lobby-options {
+    flex-direction: row;
+    gap: 15px;
+  }
+
+  .lobby-option {
+    flex: 1;
+    padding: 15px;
+  }
+
+  .mode-selection {
+    flex-direction: row;
+    margin-bottom: 15px;
+  }
+
+  .mode-btn {
+    padding: 15px;
+  }
+
+  .code-box {
+    gap: 8px;
+  }
+
+  .code-char {
+    width: 50px;
+    height: 60px;
+    font-size: 1.8rem;
+  }
+}
+
+/* Touch optimizations */
+@media (hover: none) and (pointer: coarse) {
+  .lobby-option, .mode-btn, .action-btn {
+    min-height: 60px;
+  }
+
+  .lobby-option:hover, .mode-btn:hover {
+    transform: none;
+  }
+
+  .lobby-option:active, .mode-btn:active {
+    transform: scale(0.98);
+  }
+
+  .code-input {
+    font-size: 1.8rem;
+    caret-color: #0088ff;
+  }
+}

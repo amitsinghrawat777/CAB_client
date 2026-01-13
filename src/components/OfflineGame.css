@@ -563,3 +563,344 @@
     gap: 20px;
   }
 }
+
+/* ==================== PC OPTIMIZATIONS ==================== */
+@media (min-width: 1200px) {
+  .offline-game {
+    padding: 40px;
+  }
+
+  .setup-content, .guess-container, .transition-content {
+    max-width: 550px;
+  }
+
+  .player-badge {
+    font-size: 1.1rem;
+    padding: 10px 25px;
+  }
+
+  .setup-title, .guess-title {
+    font-size: 2.2rem;
+  }
+
+  .setup-desc {
+    font-size: 1.1rem;
+  }
+
+  .digit-inputs {
+    gap: 20px;
+  }
+
+  .digit-input {
+    width: 85px;
+    height: 100px;
+    font-size: 3rem;
+    border-radius: 12px;
+  }
+
+  .submit-btn, .confirm-btn {
+    padding: 20px 60px;
+    font-size: 1.2rem;
+    border-radius: 12px;
+  }
+
+  .transition-content {
+    padding: 50px;
+    border-radius: 20px;
+  }
+
+  .transition-content h2 {
+    font-size: 2rem;
+  }
+
+  .transition-content p {
+    font-size: 1.1rem;
+  }
+
+  .guess-header {
+    padding: 25px 35px;
+  }
+
+  .your-secret .secret-code {
+    font-size: 1.3rem;
+    letter-spacing: 10px;
+  }
+
+  .guess-container {
+    padding: 40px;
+  }
+
+  .attempt-count {
+    font-size: 1rem;
+  }
+
+  .log-container {
+    max-height: 350px;
+    padding: 20px;
+  }
+
+  .log-row {
+    padding: 15px 20px;
+    font-size: 1rem;
+  }
+
+  .log-guess {
+    font-size: 1.4rem;
+    letter-spacing: 10px;
+  }
+
+  .log-score span {
+    padding: 6px 14px;
+    font-size: 0.95rem;
+  }
+
+  .result-container {
+    padding: 60px;
+    border-radius: 20px;
+  }
+
+  .result-container h1 {
+    font-size: 2.5rem;
+  }
+
+  .winner-icon {
+    font-size: 5rem;
+  }
+
+  .stats-row {
+    gap: 40px;
+  }
+
+  .stat-item .value {
+    font-size: 1.8rem;
+    letter-spacing: 8px;
+  }
+
+  .stat-item .label {
+    font-size: 0.95rem;
+  }
+
+  .play-again-btn, .exit-btn {
+    padding: 18px 40px;
+    font-size: 1.1rem;
+  }
+}
+
+/* Tablet */
+@media (min-width: 768px) and (max-width: 1199px) {
+  .setup-content, .guess-container {
+    max-width: 480px;
+  }
+
+  .digit-input {
+    width: 70px;
+    height: 85px;
+    font-size: 2.3rem;
+  }
+
+  .setup-title, .guess-title {
+    font-size: 1.8rem;
+  }
+
+  .guess-header {
+    padding: 20px 28px;
+  }
+
+  .guess-container {
+    padding: 30px;
+  }
+}
+
+/* Very small screens */
+@media (max-width: 380px) {
+  .offline-game {
+    padding: 10px;
+  }
+
+  .player-badge {
+    font-size: 0.85rem;
+    padding: 6px 15px;
+  }
+
+  .setup-title, .guess-title {
+    font-size: 1.2rem;
+  }
+
+  .setup-desc {
+    font-size: 0.85rem;
+  }
+
+  .digit-inputs {
+    gap: 8px;
+  }
+
+  .digit-input {
+    width: 50px;
+    height: 60px;
+    font-size: 1.8rem;
+  }
+
+  .submit-btn, .confirm-btn {
+    padding: 12px 30px;
+    font-size: 0.95rem;
+  }
+
+  .transition-content {
+    padding: 25px 18px;
+  }
+
+  .transition-content h2 {
+    font-size: 1.2rem;
+  }
+
+  .guess-header {
+    padding: 12px 15px;
+    flex-direction: column;
+    gap: 8px;
+    text-align: center;
+  }
+
+  .guess-container {
+    padding: 15px 12px;
+  }
+
+  .log-row {
+    padding: 10px 12px;
+  }
+
+  .log-guess {
+    font-size: 1.1rem;
+    letter-spacing: 4px;
+  }
+
+  .log-score span {
+    padding: 3px 8px;
+    font-size: 0.75rem;
+  }
+
+  .result-container {
+    padding: 25px 18px;
+  }
+
+  .result-container h1 {
+    font-size: 1.3rem;
+  }
+
+  .stats-row {
+    gap: 15px;
+    flex-wrap: wrap;
+  }
+
+  .stat-item .value {
+    font-size: 1.2rem;
+  }
+
+  .stat-item .label {
+    font-size: 0.7rem;
+  }
+}
+
+/* Landscape Mobile */
+@media (max-height: 500px) and (orientation: landscape) {
+  .offline-game {
+    padding: 10px 20px;
+    justify-content: flex-start;
+  }
+
+  .setup-content {
+    max-width: 100%;
+  }
+
+  .player-badge {
+    margin-bottom: 15px;
+  }
+
+  .setup-title {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+  }
+
+  .setup-desc {
+    margin-bottom: 20px;
+  }
+
+  .digit-input {
+    width: 55px;
+    height: 60px;
+    font-size: 1.8rem;
+  }
+
+  .submit-btn {
+    padding: 12px 35px;
+  }
+
+  .transition-content {
+    padding: 20px 30px;
+  }
+
+  .transition-content h2 {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+  }
+
+  .guess-screen {
+    flex-direction: row;
+    align-items: stretch;
+    height: calc(100vh - 20px);
+  }
+
+  .guess-header {
+    writing-mode: vertical-lr;
+    transform: rotate(180deg);
+    padding: 15px;
+    width: auto;
+  }
+
+  .guess-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .log-container {
+    flex: 1;
+    max-height: none;
+    overflow-y: auto;
+  }
+
+  .result-container {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 20px 30px;
+  }
+
+  .stats-row {
+    flex-direction: row;
+  }
+}
+
+/* Touch optimizations */
+@media (hover: none) and (pointer: coarse) {
+  .digit-input {
+    font-size: 1.8rem;
+    caret-color: #00ff88;
+  }
+
+  .submit-btn, .confirm-btn, .play-again-btn, .exit-btn {
+    min-height: 50px;
+  }
+
+  .submit-btn:hover, .confirm-btn:hover, .play-again-btn:hover {
+    transform: none;
+  }
+
+  .submit-btn:active, .confirm-btn:active, .play-again-btn:active {
+    transform: scale(0.98);
+  }
+
+  .log-row {
+    min-height: 50px;
+  }
+}
