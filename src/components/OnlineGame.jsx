@@ -1,16 +1,16 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./OnlineGame.css";
 
-// LocalStorage key for game state
+// SessionStorage key for game state (cleared when tab is closed)
 const GAME_STATE_KEY = "protocol4_gameState";
 
 function OnlineGame({ socket, gameData, onBack }) {
   const { roomCode, role, gameMode, timeLimit } = gameData;
   
-  // Load saved state from localStorage
+  // Load saved state from sessionStorage
   const getSavedState = () => {
     try {
-      const saved = localStorage.getItem(GAME_STATE_KEY);
+      const saved = sessionStorage.getItem(GAME_STATE_KEY);
       if (saved) {
         const parsed = JSON.parse(saved);
         // Only restore if it's for the same room
@@ -51,7 +51,7 @@ function OnlineGame({ socket, gameData, onBack }) {
   // Game result
   const [gameResult, setGameResult] = useState(savedState?.gameResult || null);
 
-  // Save state to localStorage whenever important state changes
+  // Save state to sessionStorage whenever important state changes
   useEffect(() => {
     const stateToSave = {
       roomCode,
@@ -65,7 +65,7 @@ function OnlineGame({ socket, gameData, onBack }) {
       chatMessages,
       gameResult,
     };
-    localStorage.setItem(GAME_STATE_KEY, JSON.stringify(stateToSave));
+    sessionStorage.setItem(GAME_STATE_KEY, JSON.stringify(stateToSave));
   }, [roomCode, phase, secret, secretLocked, opponentReady, attackLog, defenseLog, timeLeft, chatMessages, gameResult]);
 
   // Rejoin room on reconnect
@@ -101,7 +101,7 @@ function OnlineGame({ socket, gameData, onBack }) {
     socket.on("rejoin_failed", (data) => {
       console.error("Rejoin failed:", data.error);
       // Clear saved state and go back to menu
-      localStorage.removeItem(GAME_STATE_KEY);
+      sessionStorage.removeItem(GAME_STATE_KEY);
       alert("Failed to rejoin game: " + data.error);
       onBack();
     });
@@ -149,7 +149,7 @@ function OnlineGame({ socket, gameData, onBack }) {
         isWinner: data.winner === role
       });
       // Clear saved state on game over
-      localStorage.removeItem(GAME_STATE_KEY);
+      sessionStorage.removeItem(GAME_STATE_KEY);
     });
 
     socket.on("chat_message", (data) => {
@@ -181,7 +181,7 @@ function OnlineGame({ socket, gameData, onBack }) {
         winningGuess: null
       });
       setPhase("gameover");
-      localStorage.removeItem(GAME_STATE_KEY);
+      sessionStorage.removeItem(GAME_STATE_KEY);
     });
 
     // Opponent left intentionally
@@ -193,7 +193,7 @@ function OnlineGame({ socket, gameData, onBack }) {
         winningGuess: null
       });
       setPhase("gameover");
-      localStorage.removeItem(GAME_STATE_KEY);
+      sessionStorage.removeItem(GAME_STATE_KEY);
     });
 
     return () => {
@@ -257,7 +257,7 @@ function OnlineGame({ socket, gameData, onBack }) {
   const exitGame = () => {
     if (window.confirm("Are you sure you want to exit? This will forfeit the game.")) {
       socket.emit("leave_room", { roomCode });
-      localStorage.removeItem(GAME_STATE_KEY);
+      sessionStorage.removeItem(GAME_STATE_KEY);
       onBack();
     }
   };

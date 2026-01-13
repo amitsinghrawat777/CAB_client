@@ -7,18 +7,18 @@ import OfflineGame from "./components/OfflineGame";
 import "./App.css";
 
 // Server URL: Use environment variable or fallback
-const SERVER_URL = import.meta.env.VITE_SERVER_URL || "http://localhost:3001";
+const SERVER_URL = import.meta.env.VITE_SERVER_URL //|| "http://localhost:3001";
 
-// LocalStorage keys
+// SessionStorage keys (cleared when tab is closed)
 const STORAGE_KEYS = {
   SCREEN: "protocol4_screen",
   GAME_DATA: "protocol4_gameData",
 };
 
 function App() {
-  // Initialize state from localStorage
+  // Initialize state from sessionStorage
   const getInitialScreen = () => {
-    const saved = localStorage.getItem(STORAGE_KEYS.SCREEN);
+    const saved = sessionStorage.getItem(STORAGE_KEYS.SCREEN);
     // Only restore online/lobby screens - menu and offline don't need persistence
     if (saved === "online" || saved === "lobby") {
       return saved;
@@ -27,7 +27,7 @@ function App() {
   };
 
   const getInitialGameData = () => {
-    const saved = localStorage.getItem(STORAGE_KEYS.GAME_DATA);
+    const saved = sessionStorage.getItem(STORAGE_KEYS.GAME_DATA);
     if (saved) {
       try {
         return JSON.parse(saved);
@@ -51,18 +51,18 @@ function App() {
   // Persist screen state
   useEffect(() => {
     if (screen === "online" || screen === "lobby") {
-      localStorage.setItem(STORAGE_KEYS.SCREEN, screen);
+      sessionStorage.setItem(STORAGE_KEYS.SCREEN, screen);
     } else {
-      localStorage.removeItem(STORAGE_KEYS.SCREEN);
+      sessionStorage.removeItem(STORAGE_KEYS.SCREEN);
     }
   }, [screen]);
 
   // Persist game data
   useEffect(() => {
     if (gameData) {
-      localStorage.setItem(STORAGE_KEYS.GAME_DATA, JSON.stringify(gameData));
+      sessionStorage.setItem(STORAGE_KEYS.GAME_DATA, JSON.stringify(gameData));
     } else {
-      localStorage.removeItem(STORAGE_KEYS.GAME_DATA);
+      sessionStorage.removeItem(STORAGE_KEYS.GAME_DATA);
     }
   }, [gameData]);
 
@@ -123,10 +123,10 @@ function App() {
     }
     setGameData(null);
     setScreen("menu");
-    // Clear all game-related localStorage
-    localStorage.removeItem(STORAGE_KEYS.SCREEN);
-    localStorage.removeItem(STORAGE_KEYS.GAME_DATA);
-    localStorage.removeItem("protocol4_gameState");
+    // Clear all game-related sessionStorage
+    sessionStorage.removeItem(STORAGE_KEYS.SCREEN);
+    sessionStorage.removeItem(STORAGE_KEYS.GAME_DATA);
+    sessionStorage.removeItem("protocol4_gameState");
   };
 
   // Render current screen
