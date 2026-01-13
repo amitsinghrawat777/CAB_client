@@ -3,7 +3,7 @@ import io from "socket.io-client";
 import "./App.css";
 
 // Server URL: Use environment variable or fallback
-const SERVER_URL = import.meta.env.VITE_SERVER_URL || "http://localhost:3001";
+const SERVER_URL = import.meta.env.VITE_SERVER_URL //|| "http://localhost:3001";
 
 function App() {
   const socketRef = useRef(null);
@@ -26,6 +26,9 @@ function App() {
   const [defenseLog, setDefenseLog] = useState([]); // Opponent's guesses on me
   const [attackLog, setAttackLog] = useState([]);   // My guesses on opponent
 
+  // Store role in a ref for use in callbacks
+  const roleRef = useRef("");
+
   // Initialize socket connection
   useEffect(() => {
     socketRef.current = io.connect(SERVER_URL);
@@ -37,6 +40,7 @@ function App() {
 
     socket.on("role_assigned", (r) => {
       setRole(r);
+      roleRef.current = r;
       if (r === "Player 1") {
         setStatus("Waiting for opponent to join...");
       }
@@ -68,7 +72,7 @@ function App() {
       setGamePhase("gameover");
       setGameResult({
         winner: data.winner,
-        isWinner: data.winner === role,
+        isWinner: data.winner === roleRef.current,
         opponentCode: data.opponentCode,
         winningGuess: data.winningGuess
       });
@@ -87,7 +91,7 @@ function App() {
     return () => {
       socket.disconnect();
     };
-  }, [role]);
+  }, []);
 
   // Validate input: 4 unique digits
   const validateCode = (code) => {
