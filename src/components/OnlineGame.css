@@ -1,0 +1,811 @@
+/* ==================== ONLINE GAME - PROTOCOL 4 THEME ==================== */
+
+.online-game {
+  min-height: 100vh;
+  background: #0a0a0f;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ==================== GAME HEADER ==================== */
+.game-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 25px;
+  background: rgba(0, 0, 0, 0.5);
+  border-bottom: 1px solid rgba(0, 255, 136, 0.2);
+}
+
+.header-left, .header-right {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.header-center {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.room-badge {
+  font-family: 'Courier New', monospace;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.6);
+  padding: 6px 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 4px;
+}
+
+.mode-badge {
+  font-family: 'Courier New', monospace;
+  font-size: 0.8rem;
+  color: #0088ff;
+  padding: 4px 10px;
+  border: 1px solid rgba(0, 136, 255, 0.3);
+  border-radius: 4px;
+}
+
+.role-badge {
+  font-family: 'Courier New', monospace;
+  font-size: 0.85rem;
+  font-weight: 700;
+  padding: 6px 14px;
+  border-radius: 4px;
+}
+
+.role-badge[data-role="Player 1"] {
+  background: linear-gradient(135deg, rgba(0, 255, 136, 0.2), rgba(0, 255, 136, 0.1));
+  color: #00ff88;
+  border: 1px solid rgba(0, 255, 136, 0.3);
+}
+
+.role-badge[data-role="Player 2"] {
+  background: linear-gradient(135deg, rgba(0, 136, 255, 0.2), rgba(0, 136, 255, 0.1));
+  color: #0088ff;
+  border: 1px solid rgba(0, 136, 255, 0.3);
+}
+
+.timer {
+  font-family: 'Courier New', monospace;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #00ff88;
+  padding: 6px 14px;
+  background: rgba(0, 255, 136, 0.1);
+  border: 1px solid rgba(0, 255, 136, 0.3);
+  border-radius: 4px;
+}
+
+.timer.warning {
+  color: #ff0080;
+  background: rgba(255, 0, 128, 0.1);
+  border-color: rgba(255, 0, 128, 0.3);
+  animation: timerPulse 1s ease-in-out infinite;
+}
+
+@keyframes timerPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+.my-secret {
+  font-family: 'Courier New', monospace;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.secret-digits {
+  color: #00ff88;
+  font-weight: 700;
+  letter-spacing: 4px;
+}
+
+.chat-toggle {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.7);
+  padding: 8px 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.chat-toggle:hover, .chat-toggle.active {
+  background: rgba(0, 255, 136, 0.1);
+  border-color: #00ff88;
+  color: #00ff88;
+}
+
+.chat-badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: #ff0080;
+  color: white;
+  font-size: 0.7rem;
+  padding: 2px 6px;
+  border-radius: 10px;
+}
+
+/* ==================== SETUP PHASE ==================== */
+.setup-phase {
+  justify-content: flex-start;
+}
+
+.setup-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+}
+
+.setup-title {
+  font-family: 'Courier New', monospace;
+  font-size: 1.5rem;
+  color: #00ff88;
+  margin-bottom: 40px;
+  text-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+}
+
+.secret-input-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 25px;
+}
+
+.digit-inputs {
+  display: flex;
+  gap: 12px;
+}
+
+.digit-input {
+  width: 65px;
+  height: 80px;
+  background: rgba(0, 255, 136, 0.05);
+  border: 2px solid rgba(0, 255, 136, 0.3);
+  border-radius: 8px;
+  color: #00ff88;
+  font-family: 'Courier New', monospace;
+  font-size: 2.5rem;
+  font-weight: 700;
+  text-align: center;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.digit-input:focus {
+  border-color: #00ff88;
+  background: rgba(0, 255, 136, 0.1);
+  box-shadow: 0 0 30px rgba(0, 255, 136, 0.3);
+}
+
+.lock-btn {
+  padding: 15px 40px;
+  background: linear-gradient(135deg, rgba(0, 255, 136, 0.2), rgba(0, 255, 136, 0.1));
+  border: 2px solid #00ff88;
+  border-radius: 8px;
+  color: #00ff88;
+  font-family: 'Courier New', monospace;
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.lock-btn:hover:not(:disabled) {
+  background: rgba(0, 255, 136, 0.3);
+  box-shadow: 0 0 30px rgba(0, 255, 136, 0.4);
+}
+
+.lock-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.code-locked {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+.locked-display {
+  display: flex;
+  gap: 12px;
+}
+
+.locked-digit {
+  width: 65px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 255, 136, 0.1);
+  border: 2px solid #00ff88;
+  border-radius: 8px;
+  color: #00ff88;
+  font-family: 'Courier New', monospace;
+  font-size: 2.5rem;
+  font-weight: 700;
+  text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+}
+
+.locked-label {
+  font-family: 'Courier New', monospace;
+  font-size: 1rem;
+  color: #00ff88;
+}
+
+.opponent-status {
+  margin-top: 40px;
+  font-family: 'Courier New', monospace;
+  font-size: 1rem;
+}
+
+.opponent-status .ready {
+  color: #00ff88;
+}
+
+.opponent-status .waiting {
+  color: rgba(255, 255, 255, 0.5);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.dot-loader {
+  display: flex;
+  gap: 4px;
+}
+
+.dot-loader::before,
+.dot-loader::after {
+  content: '';
+  width: 6px;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 50%;
+  animation: dotBlink 1.4s ease-in-out infinite;
+}
+
+.dot-loader::after {
+  animation-delay: 0.2s;
+}
+
+@keyframes dotBlink {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
+}
+
+/* ==================== PLAYING PHASE ==================== */
+.playing-phase {
+  height: 100vh;
+}
+
+.game-area {
+  flex: 1;
+  display: flex;
+  padding: 20px;
+  gap: 20px;
+  overflow: hidden;
+}
+
+.notebook {
+  flex: 1;
+  display: flex;
+  background: linear-gradient(180deg, #121218 0%, #0d0d12 100%);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+}
+
+.column {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  overflow: hidden;
+}
+
+.defense {
+  background: linear-gradient(135deg, rgba(0, 136, 255, 0.03), transparent);
+}
+
+.attack {
+  background: linear-gradient(135deg, transparent, rgba(0, 255, 136, 0.03));
+}
+
+.column-header {
+  text-align: center;
+  margin-bottom: 15px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.column-header h3 {
+  font-family: 'Courier New', monospace;
+  font-size: 1.2rem;
+  margin: 0 0 5px 0;
+}
+
+.defense .column-header h3 {
+  color: #0088ff;
+}
+
+.attack .column-header h3 {
+  color: #00ff88;
+}
+
+.column-desc {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.notebook-divider {
+  width: 1px;
+  background: rgba(255, 255, 255, 0.1);
+  position: relative;
+}
+
+.divider-line {
+  position: absolute;
+  top: 20%;
+  bottom: 20%;
+  left: 0;
+  width: 1px;
+  background: linear-gradient(180deg, transparent, rgba(0, 255, 136, 0.5), transparent);
+}
+
+/* ==================== LOG ENTRIES ==================== */
+.log-container {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 8px;
+}
+
+.empty-log {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.3);
+  font-family: 'Courier New', monospace;
+  font-style: italic;
+}
+
+.log-entry {
+  display: flex;
+  align-items: center;
+  padding: 12px 15px;
+  margin-bottom: 8px;
+  border-radius: 6px;
+  animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.defense-entry {
+  background: rgba(0, 136, 255, 0.1);
+  border-left: 3px solid #0088ff;
+}
+
+.attack-entry {
+  background: rgba(0, 255, 136, 0.1);
+  border-left: 3px solid #00ff88;
+}
+
+.entry-num {
+  font-family: 'Courier New', monospace;
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.4);
+  margin-right: 12px;
+  min-width: 25px;
+}
+
+.entry-code {
+  font-family: 'Courier New', monospace;
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: 5px;
+  flex: 1;
+  color: white;
+}
+
+.entry-score {
+  display: flex;
+  gap: 10px;
+}
+
+.found {
+  font-family: 'Courier New', monospace;
+  font-weight: 700;
+  font-size: 1rem;
+  color: #facc15;
+}
+
+.locked {
+  font-family: 'Courier New', monospace;
+  font-weight: 700;
+  font-size: 1rem;
+  color: #ff0080;
+}
+
+/* ==================== GUESS INPUT ==================== */
+.guess-input-area {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 15px;
+  align-items: center;
+}
+
+.guess-inputs {
+  display: flex;
+  gap: 8px;
+  flex: 1;
+}
+
+.guess-input {
+  flex: 1;
+  max-width: 55px;
+  height: 55px;
+  background: rgba(0, 255, 136, 0.05);
+  border: 2px solid rgba(0, 255, 136, 0.3);
+  border-radius: 6px;
+  color: #00ff88;
+  font-family: 'Courier New', monospace;
+  font-size: 1.5rem;
+  font-weight: 700;
+  text-align: center;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.guess-input:focus {
+  border-color: #00ff88;
+  background: rgba(0, 255, 136, 0.1);
+  box-shadow: 0 0 20px rgba(0, 255, 136, 0.2);
+}
+
+.guess-btn {
+  padding: 15px 20px;
+  background: linear-gradient(135deg, rgba(0, 255, 136, 0.2), rgba(0, 255, 136, 0.1));
+  border: 2px solid #00ff88;
+  border-radius: 6px;
+  color: #00ff88;
+  font-family: 'Courier New', monospace;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.guess-btn:hover:not(:disabled) {
+  background: rgba(0, 255, 136, 0.3);
+  box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+}
+
+.guess-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ==================== CHAT PANEL ==================== */
+.chat-panel {
+  width: 300px;
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+}
+
+.chat-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  font-family: 'Courier New', monospace;
+  font-size: 0.9rem;
+  color: #00ff88;
+}
+
+.chat-close {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+.chat-close:hover {
+  color: #ff0080;
+}
+
+.chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.chat-msg {
+  max-width: 85%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+}
+
+.chat-msg.mine {
+  align-self: flex-end;
+  background: rgba(0, 255, 136, 0.1);
+  border: 1px solid rgba(0, 255, 136, 0.3);
+}
+
+.chat-msg.theirs {
+  align-self: flex-start;
+  background: rgba(0, 136, 255, 0.1);
+  border: 1px solid rgba(0, 136, 255, 0.3);
+}
+
+.msg-sender {
+  display: block;
+  font-family: 'Courier New', monospace;
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.5);
+  margin-bottom: 4px;
+}
+
+.msg-text {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.chat-input-area {
+  display: flex;
+  gap: 8px;
+  padding: 15px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.chat-input {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  padding: 10px 12px;
+  color: white;
+  font-size: 0.85rem;
+  outline: none;
+}
+
+.chat-input:focus {
+  border-color: #00ff88;
+}
+
+.chat-send {
+  background: #00ff88;
+  border: none;
+  border-radius: 6px;
+  color: #0a0a0f;
+  padding: 10px 15px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* ==================== GAME OVER ==================== */
+.gameover-phase {
+  justify-content: center;
+  align-items: center;
+}
+
+.result-container {
+  text-align: center;
+  padding: 50px;
+  border-radius: 16px;
+  max-width: 450px;
+  width: 100%;
+}
+
+.result-container.winner {
+  background: linear-gradient(135deg, rgba(0, 255, 136, 0.1), rgba(0, 255, 136, 0.05));
+  border: 2px solid rgba(0, 255, 136, 0.3);
+}
+
+.result-container.loser {
+  background: linear-gradient(135deg, rgba(255, 0, 128, 0.1), rgba(255, 0, 128, 0.05));
+  border: 2px solid rgba(255, 0, 128, 0.3);
+}
+
+.result-icon {
+  font-size: 4rem;
+  margin-bottom: 20px;
+}
+
+.result-title {
+  font-family: 'Courier New', monospace;
+  font-size: 2rem;
+  margin: 0 0 10px 0;
+  letter-spacing: 3px;
+}
+
+.winner .result-title {
+  color: #00ff88;
+  text-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+}
+
+.loser .result-title {
+  color: #ff0080;
+  text-shadow: 0 0 20px rgba(255, 0, 128, 0.5);
+}
+
+.result-subtitle {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 30px;
+}
+
+.result-details {
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 30px;
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.detail-row:last-child {
+  border-bottom: none;
+}
+
+.detail-label {
+  font-family: 'Courier New', monospace;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.detail-value {
+  font-family: 'Courier New', monospace;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #0088ff;
+  letter-spacing: 3px;
+}
+
+.detail-value.highlight {
+  color: #00ff88;
+}
+
+.result-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.rematch-btn {
+  padding: 15px 30px;
+  background: linear-gradient(135deg, rgba(0, 255, 136, 0.2), rgba(0, 255, 136, 0.1));
+  border: 2px solid #00ff88;
+  border-radius: 8px;
+  color: #00ff88;
+  font-family: 'Courier New', monospace;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.rematch-btn:hover {
+  background: rgba(0, 255, 136, 0.3);
+}
+
+.rematch-waiting {
+  font-family: 'Courier New', monospace;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.5);
+  padding: 15px;
+}
+
+.exit-btn {
+  padding: 12px 25px;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 6px;
+  color: rgba(255, 255, 255, 0.6);
+  font-family: 'Courier New', monospace;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.exit-btn:hover {
+  border-color: rgba(255, 255, 255, 0.5);
+  color: white;
+}
+
+/* ==================== RESPONSIVE ==================== */
+@media (max-width: 768px) {
+  .game-header {
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 12px 15px;
+  }
+
+  .header-center {
+    position: static;
+    transform: none;
+    width: 100%;
+    order: 3;
+    text-align: center;
+    margin-top: 5px;
+  }
+
+  .game-area {
+    flex-direction: column;
+    padding: 10px;
+  }
+
+  .notebook {
+    flex-direction: column;
+  }
+
+  .notebook-divider {
+    width: 100%;
+    height: 1px;
+  }
+
+  .column {
+    padding: 15px;
+    min-height: 250px;
+  }
+
+  .chat-panel {
+    width: 100%;
+    max-height: 300px;
+  }
+
+  .digit-input, .locked-digit {
+    width: 55px;
+    height: 65px;
+    font-size: 2rem;
+  }
+
+  .guess-input {
+    max-width: 45px;
+    height: 50px;
+    font-size: 1.3rem;
+  }
+
+  .guess-btn {
+    padding: 12px 15px;
+    font-size: 0.85rem;
+  }
+
+  .result-container {
+    padding: 30px 20px;
+  }
+
+  .result-title {
+    font-size: 1.5rem;
+  }
+}
