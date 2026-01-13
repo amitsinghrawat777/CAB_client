@@ -36,8 +36,11 @@ function OnlineGame({ socket, gameData, onBack }) {
       setOpponentReady(true);
     });
 
-    socket.on("both_ready", () => {
-      setPhase("playing");
+    socket.on("game_phase", (data) => {
+      console.log("Game phase changed:", data.phase);
+      if (data.phase === "playing") {
+        setPhase("playing");
+      }
     });
 
     socket.on("guess_result", (data) => {
@@ -48,8 +51,8 @@ function OnlineGame({ socket, gameData, onBack }) {
       setDefenseLog((prev) => [data, ...prev]);
     });
 
-    socket.on("timer_update", (time) => {
-      setTimeLeft(time);
+    socket.on("timer_update", (data) => {
+      setTimeLeft(data.timeRemaining);
     });
 
     socket.on("game_over", (data) => {
@@ -73,7 +76,7 @@ function OnlineGame({ socket, gameData, onBack }) {
 
     return () => {
       socket.off("opponent_ready");
-      socket.off("both_ready");
+      socket.off("game_phase");
       socket.off("guess_result");
       socket.off("opponent_guessed");
       socket.off("timer_update");
@@ -102,7 +105,8 @@ function OnlineGame({ socket, gameData, onBack }) {
     const validation = validateCode(secret);
     if (!validation.valid) return alert(validation.error);
     
-    socket.emit("set_secret", { room: roomCode, code: secret });
+    console.log("Locking secret:", secret, "for room:", roomCode, "role:", role);
+    socket.emit("set_secret", { roomCode, code: secret, role });
     setSecretLocked(true);
   };
 
@@ -110,13 +114,13 @@ function OnlineGame({ socket, gameData, onBack }) {
     const validation = validateCode(guess);
     if (!validation.valid) return alert(validation.error);
     
-    socket.emit("send_guess", { room: roomCode, guess });
+    socket.emit("send_guess", { roomCode, guess, role });
     setGuess("");
   };
 
   const sendChat = () => {
     if (chatInput.trim() === "") return;
-    socket.emit("chat_message", { room: roomCode, message: chatInput, sender: role });
+    socket.emit("chat_message", { roomCode, message: chatInput, sender: role });
     setChatInput("");
   };
 
