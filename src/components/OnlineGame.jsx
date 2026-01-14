@@ -60,6 +60,10 @@ function OnlineGame({ socket, gameData, onBack }) {
   const [chatInput, setChatInput] = useState("");
   const [chatOpen, setChatOpen] = useState(false);
   const chatRef = useRef(null);
+
+  const pushSystemMessage = (message) => {
+    setChatMessages((prev) => [...prev, { sender: "SYSTEM", message }]);
+  };
   
   // Game result
   const [gameResult, setGameResult] = useState(savedState?.gameResult || null);
@@ -113,9 +117,8 @@ function OnlineGame({ socket, gameData, onBack }) {
 
     socket.on("rejoin_failed", (data) => {
       console.error("Rejoin failed:", data.error);
-      // Clear saved state and go back to menu
+      // Clear saved state and go back to menu silently
       sessionStorage.removeItem(GAME_STATE_KEY);
-      alert("Failed to rejoin game: " + data.error);
       onBack();
     });
 
@@ -270,7 +273,10 @@ function OnlineGame({ socket, gameData, onBack }) {
 
   const lockSecret = () => {
     const validation = validateCode(secret);
-    if (!validation.valid) return alert(validation.error);
+    if (!validation.valid) {
+      pushSystemMessage(validation.error);
+      return;
+    }
     
     console.log("Locking secret:", secret, "for room:", roomCode, "role:", role);
     socket.emit("set_secret", { roomCode, code: secret, role });
@@ -279,7 +285,10 @@ function OnlineGame({ socket, gameData, onBack }) {
 
   const sendGuess = () => {
     const validation = validateCode(guess);
-    if (!validation.valid) return alert(validation.error);
+    if (!validation.valid) {
+      pushSystemMessage(validation.error);
+      return;
+    }
     
     socket.emit("send_guess", { roomCode, guess, role });
     setGuess("");
