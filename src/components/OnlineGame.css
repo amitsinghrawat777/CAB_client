@@ -483,14 +483,14 @@
 
 .guess-input {
   flex: 1;
-  max-width: 55px;
-  height: 55px;
+  max-width: 68px;
+  height: 72px;
   background: rgba(0, 255, 136, 0.05);
   border: 2px solid rgba(0, 255, 136, 0.3);
   border-radius: 6px;
   color: #00ff88;
   font-family: 'Courier New', monospace;
-  font-size: 1.5rem;
+  font-size: 2rem;
   font-weight: 700;
   text-align: center;
   outline: none;
@@ -653,8 +653,9 @@
   text-align: center;
   padding: 50px;
   border-radius: 16px;
-  max-width: 450px;
-  width: 100%;
+  max-width: 720px;
+  width: 90%;
+  margin: 0 auto;
 }
 
 .result-container.winner {
@@ -804,6 +805,23 @@
 .exit-btn:hover {
   border-color: rgba(255, 255, 255, 0.5);
   color: white;
+}
+
+.rematch-offer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(0, 255, 136, 0.25);
+  border-radius: 10px;
+  padding: 14px;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.rematch-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
 }
 
 /* ==================== RESPONSIVE ==================== */
@@ -1112,8 +1130,8 @@
   .result-container {
     padding: 60px 80px;
     border-radius: 24px;
-    max-width: 600px;
-    width: 90%;
+    max-width: 900px;
+    width: 80%;
   }
 
   .result-icon {
@@ -1209,7 +1227,7 @@
 
   .result-container {
     padding: 80px 100px;
-    max-width: 700px;
+    max-width: 1000px;
   }
 
   .result-icon {
@@ -1332,9 +1350,9 @@
   }
 
   .guess-input {
-    max-width: 52px;
-    height: 58px;
-    font-size: 1.6rem;
+    max-width: 64px;
+    height: 68px;
+    font-size: 1.9rem;
     line-height: 1.1;
     border-width: 2px;
     background: rgba(0, 0, 0, 0.6);

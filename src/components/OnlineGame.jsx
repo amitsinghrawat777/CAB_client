@@ -17,6 +17,8 @@ function OnlineGame({ socket, gameData, onBack }) {
   }
 
   const { roomCode, role, gameMode, timeLimit } = gameData;
+
+  const gameOverTimerRef = useRef(null);
   
   // Load saved state from sessionStorage
   const getSavedState = () => {
@@ -157,7 +159,9 @@ function OnlineGame({ socket, gameData, onBack }) {
       setGameResult({
         ...data,
         opponentCode,
-        isWinner: data.winner === role
+        isWinner: data.winner === role,
+        rematchRequested: false,
+        rematchOffer: false
       });
       // Clear saved state on game over
       sessionStorage.removeItem(GAME_STATE_KEY);
@@ -181,6 +185,31 @@ function OnlineGame({ socket, gameData, onBack }) {
         ...prev,
         { sender: "SYSTEM", message: "✅ Opponent reconnected!" }
       ]);
+    });
+
+    socket.on("rematch_requested", () => {
+      setGameResult((prev) => ({
+        ...prev,
+        rematchOffer: true,
+        rematchRequested: false
+      }));
+    });
+
+    socket.on("rematch_accepted", () => {
+      // Reset client state for new match
+      setPhase("setup");
+      setSecret("");
+      setSecretLocked(false);
+      setOpponentReady(false);
+      setAttackLog([]);
+      setDefenseLog([]);
+      setGuess("");
+      setChatMessages([]);
+      setChatOpen(false);
+      setGameResult(null);
+      setTimeLeft(gameMode === "blitz" ? 300 : timeLimit || 300);
+      sessionStorage.removeItem(GAME_STATE_KEY);
+      clearGameOverTimer();
     });
 
     // Opponent permanently disconnected
@@ -219,6 +248,8 @@ function OnlineGame({ socket, gameData, onBack }) {
       socket.off("opponent_reconnected");
       socket.off("opponent_disconnected");
       socket.off("opponent_left");
+      socket.off("rematch_requested");
+      socket.off("rematch_accepted");
     };
   }, [socket, role]);
 
@@ -260,9 +291,30 @@ function OnlineGame({ socket, gameData, onBack }) {
     setChatInput("");
   };
 
+  const clearGameOverTimer = () => {
+    if (gameOverTimerRef.current) {
+      clearTimeout(gameOverTimerRef.current);
+      gameOverTimerRef.current = null;
+    }
+  };
+
   const requestRematch = () => {
+    clearGameOverTimer();
     socket.emit("rematch_request", { room: roomCode });
-    setGameResult((prev) => ({ ...prev, rematchRequested: true }));
+    setGameResult((prev) => ({ ...prev, rematchRequested: true, rematchOffer: false }));
+  };
+
+  const acceptRematch = () => {
+    clearGameOverTimer();
+    socket.emit("rematch_request", { room: roomCode });
+    setGameResult((prev) => ({ ...prev, rematchRequested: true, rematchOffer: false }));
+  };
+
+  const declineRematch = () => {
+    clearGameOverTimer();
+    socket.emit("leave_room", { roomCode });
+    sessionStorage.removeItem(GAME_STATE_KEY);
+    onBack();
   };
 
   const exitGame = () => {
@@ -278,6 +330,18 @@ function OnlineGame({ socket, gameData, onBack }) {
     const s = seconds % 60;
     return `${m}:${s.toString().padStart(2, "0")}`;
   };
+
+  // Auto-return to menu 5s after game over unless rematch is in progress
+  useEffect(() => {
+    if (phase === "gameover") {
+      clearGameOverTimer();
+      gameOverTimerRef.current = setTimeout(() => {
+        sessionStorage.removeItem(GAME_STATE_KEY);
+        onBack();
+      }, 5000);
+    }
+    return () => clearGameOverTimer();
+  }, [phase, onBack]);
 
   // ==================== SETUP PHASE ====================
   if (phase === "setup") {
@@ -368,6 +432,8 @@ function OnlineGame({ socket, gameData, onBack }) {
   // ==================== GAME OVER PHASE ====================
   if (phase === "gameover" && gameResult) {
     const isWinner = gameResult.winner === role;
+    const showOffer = gameResult.rematchOffer;
+    const waiting = gameResult.rematchRequested && !gameResult.rematchOffer;
     
     return (
       <div className="online-game gameover-phase">
@@ -412,14 +478,22 @@ function OnlineGame({ socket, gameData, onBack }) {
           </div>
 
           <div className="result-actions">
-            {gameResult.rematchRequested ? (
+            {showOffer ? (
+              <div className="rematch-offer">
+                <span>Opponent wants a rematch</span>
+                <div className="rematch-actions">
+                  <button className="rematch-btn" onClick={acceptRematch}>⚡ Accept</button>
+                  <button className="exit-btn" onClick={declineRematch}>Decline</button>
+                </div>
+              </div>
+            ) : waiting ? (
               <span className="rematch-waiting">Waiting for opponent...</span>
             ) : (
               <button className="rematch-btn" onClick={requestRematch}>
                 ⚡ REMATCH
               </button>
             )}
-            <button className="exit-btn" onClick={onBack}>
+            <button className="exit-btn" onClick={() => { clearGameOverTimer(); onBack(); }}>
               EXIT TO MENU
             </button>
           </div>
