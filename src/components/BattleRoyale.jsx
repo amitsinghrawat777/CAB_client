@@ -1,7 +1,10 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { getSupabaseClient } from "../lib/supabaseClient";
 import "./BattleRoyale.css";
 
 const randomName = () => `Player-${Math.floor(Math.random() * 900 + 100)}`;
+const COOKIE_KEY = "br_history";
+const COOKIE_MAX_BYTES = 3800;
 
 function BattleRoyale({ socket, onBack }) {
   const [roomCode, setRoomCode] = useState(null);
@@ -20,7 +23,9 @@ function BattleRoyale({ socket, onBack }) {
   const [error, setError] = useState(null);
   const [timeLeft, setTimeLeft] = useState(null);
   const [socketId, setSocketId] = useState(null);
+  const supabaseClient = useMemo(() => getSupabaseClient(), []);
   const inputRefs = useRef([]);
+  const leaderboard = useMemo(() => players || [], [players]);
 
   useEffect(() => {
     if (!socket) return;
@@ -29,6 +34,75 @@ function BattleRoyale({ socket, onBack }) {
     socket.on("connect", handleConnect);
     return () => socket.off("connect", handleConnect);
   }, [socket]);
+
+  const writeHistoryCookie = useCallback((entry) => {
+    try {
+      const payload = { ...entry };
+      payload.attempts = [...(entry.attempts || [])];
+      let encoded = encodeURIComponent(JSON.stringify(payload));
+      while (encoded.length > COOKIE_MAX_BYTES && payload.attempts.length > 0) {
+        payload.attempts.pop();
+        encoded = encodeURIComponent(JSON.stringify(payload));
+      }
+      document.cookie = `${COOKIE_KEY}=${encoded}; path=/; max-age=2592000; SameSite=Lax`;
+    } catch (err) {
+      console.error("Failed to write cookie", err);
+    }
+  }, []);
+
+  const persistBattleHistory = useCallback(async (payload = {}) => {
+    const attempts = [...(history || [])]
+      .slice(0, 50)
+      .reverse()
+      .map((h) => ({ guess: h.guess, bulls: h.bulls, cows: h.cows, score: h.score, moves: h.moves }));
+
+    const leaderboardSnapshot = (payload.leaderboard || leaderboard || []).map((p) => ({
+      name: p.name,
+      best_score: p.best_score,
+      moves: p.moves,
+    }));
+
+    const entry = {
+      roomCode: payload.roomCode || roomCode,
+      mode,
+      winner: payload.winner ?? null,
+      secret: payload.secret ?? null,
+      reason: payload.reason ?? null,
+      playerName: name,
+      attempts,
+      leaderboard: leaderboardSnapshot,
+      playersCount: leaderboardSnapshot.length || players.length || null,
+      isHost,
+      endedAt: new Date().toISOString(),
+    };
+
+    writeHistoryCookie(entry);
+
+    if (!supabaseClient) return;
+
+    try {
+      const { error: supabaseError } = await supabaseClient.from("battle_history").insert({
+        room_code: entry.roomCode,
+        mode: entry.mode,
+        winner: entry.winner,
+        secret: entry.secret,
+        reason: entry.reason,
+        player_name: entry.playerName,
+        attempts: entry.attempts,
+        leaderboard: entry.leaderboard,
+        players_count: entry.playersCount,
+        is_host: entry.isHost,
+        ended_at: entry.endedAt,
+      });
+
+      if (supabaseError) {
+        throw supabaseError;
+      }
+    } catch (err) {
+      console.error("Supabase save failed", err);
+      setError("Saved locally; Supabase unavailable");
+    }
+  }, [history, leaderboard, roomCode, mode, name, players.length, isHost, supabaseClient, writeHistoryCookie]);
 
   // Socket wiring
   useEffect(() => {
@@ -90,6 +164,7 @@ function BattleRoyale({ socket, onBack }) {
           guess: data.guess,
           bulls: data.bulls,
           cows: data.cows,
+          matches: data.bulls + data.cows,
           score: data.score,
           moves: data.moves,
           ts: Date.now(),
@@ -104,6 +179,7 @@ function BattleRoyale({ socket, onBack }) {
       setView("lobby");
       setStatus(`Winner: ${payload.winner ?? "N/A"} | Code: ${payload.secret}`);
       setTimeLeft(null);
+      void persistBattleHistory(payload);
     };
 
     const handleError = (payload = {}) => {
@@ -137,9 +213,7 @@ function BattleRoyale({ socket, onBack }) {
       socket.off("battle_error", handleError);
       socket.off("battle_host_changed", handleHostChanged);
     };
-  }, [socket, socketId]);
-
-  const leaderboard = useMemo(() => players || [], [players]);
+  }, [socket, socketId, persistBattleHistory]);
 
   const createRoom = () => {
     if (!socket) return;
@@ -328,7 +402,7 @@ function BattleRoyale({ socket, onBack }) {
                 {history.map((h) => (
                   <div key={h.ts} className="history-row">
                     <span className="h-guess">{h.guess}</span>
-                    <span className="h-score">+{h.cows} -{h.bulls} | {h.score}</span>
+                    <span className="h-score">+{(h.matches ?? h.cows + h.bulls)} -{h.bulls} | {h.score}</span>
                   </div>
                 ))}
               </div>

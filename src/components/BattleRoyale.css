@@ -48,6 +48,7 @@
   margin: 8px 0 4px;
 }
 
+
 .name-field {
   display: flex;
   flex-direction: column;
@@ -55,7 +56,6 @@
 }
 
 .name-field input,
-.host-controls input,
 .br-card input {
   padding: 10px 12px;
   background: rgba(0, 0, 0, 0.45);
