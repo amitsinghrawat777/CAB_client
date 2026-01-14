@@ -18,11 +18,14 @@ function BattleRoyale({ socket, onBack }) {
   const [gameOver, setGameOver] = useState(null);
   const [mode, setMode] = useState("normal");
   const [maxPlayers, setMaxPlayers] = useState(20);
+  const [eSport, setESport] = useState(false);
   const [view, setView] = useState("menu"); // menu | create | join | lobby | game
   const [joinCode, setJoinCode] = useState("");
   const [error, setError] = useState(null);
   const [timeLeft, setTimeLeft] = useState(null);
   const [socketId, setSocketId] = useState(null);
+  const [selectedPlayer, setSelectedPlayer] = useState(null);
+  const [selectedHistory, setSelectedHistory] = useState([]);
   const supabaseClient = useMemo(() => getSupabaseClient(), []);
   const inputRefs = useRef([]);
   const leaderboard = useMemo(() => players || [], [players]);
@@ -115,6 +118,7 @@ function BattleRoyale({ socket, onBack }) {
       setPlayers(data.players || []);
       setMode(data.mode || "normal");
       setMaxPlayers(data.maxPlayers || 20);
+      setESport(!!data.eSport);
       setView("lobby");
       setStatus("Lobby created. Wait for players, then start.");
       setError(null);
@@ -131,6 +135,7 @@ function BattleRoyale({ socket, onBack }) {
       setPlayers(data.players || []);
       setMode(data.mode || "normal");
       setMaxPlayers(data.maxPlayers || 20);
+      setESport(!!data.eSport);
       setView(data.started ? "game" : "lobby");
       setStatus(data.started ? "Battle started" : "Waiting for host to start");
       setError(null);
@@ -148,6 +153,7 @@ function BattleRoyale({ socket, onBack }) {
       setStarted(true);
       setView("game");
       setTimeLeft(payload.timeRemaining ?? null);
+      if (payload.eSport !== undefined) setESport(!!payload.eSport);
       setStatus("Battle started. Make your guess!");
       setHistory([]);
       setGameOver(null);
@@ -192,6 +198,11 @@ function BattleRoyale({ socket, onBack }) {
       setStatus(amHost ? "You are host now." : "Waiting for host to start");
     };
 
+    const handlePlayerHistory = (payload = {}) => {
+      setSelectedPlayer({ id: payload.playerId, name: payload.name || "Unknown" });
+      setSelectedHistory(payload.history || []);
+    };
+
     socket.on("battle_created", handleCreated);
     socket.on("battle_joined", handleJoined);
     socket.on("battle_leaderboard", handleLeaderboard);
@@ -201,6 +212,7 @@ function BattleRoyale({ socket, onBack }) {
     socket.on("battle_game_over", handleGameOver);
     socket.on("battle_error", handleError);
     socket.on("battle_host_changed", handleHostChanged);
+    socket.on("battle_player_history", handlePlayerHistory);
 
     return () => {
       socket.off("battle_created", handleCreated);
@@ -212,6 +224,7 @@ function BattleRoyale({ socket, onBack }) {
       socket.off("battle_game_over", handleGameOver);
       socket.off("battle_error", handleError);
       socket.off("battle_host_changed", handleHostChanged);
+      socket.off("battle_player_history", handlePlayerHistory);
     };
   }, [socket, socketId, persistBattleHistory]);
 
@@ -219,7 +232,7 @@ function BattleRoyale({ socket, onBack }) {
     if (!socket) return;
     const safeMax = Math.min(200, Math.max(2, Number(maxPlayers) || 2));
     setMaxPlayers(safeMax);
-    socket.emit("battle_create", { name, mode, maxPlayers: safeMax });
+    socket.emit("battle_create", { name, mode, maxPlayers: safeMax, eSport });
   };
 
   const joinRoom = () => {
@@ -235,6 +248,7 @@ function BattleRoyale({ socket, onBack }) {
 
   const submitGuess = () => {
     if (!started || !roomCode || !guess || guess.length !== 4) return;
+    if (eSport && isHost) return; // host is spectator
     socket.emit("battle_guess", { roomCode, guess });
     setGuess("");
     if (inputRefs.current[0]) inputRefs.current[0].focus();
@@ -252,6 +266,11 @@ function BattleRoyale({ socket, onBack }) {
   };
 
   const myEntry = leaderboard.find((p) => p.name === name);
+
+  const requestHistory = (playerId) => {
+    if (!socket || !isHost || !eSport || !roomCode) return;
+    socket.emit("battle_history_request", { roomCode, playerId });
+  };
 
   const renderMenu = () => (
     <div className="br-card">
@@ -276,6 +295,11 @@ function BattleRoyale({ socket, onBack }) {
       <div className="mode-choices">
         <button className={mode === "normal" ? "chip active" : "chip"} onClick={() => setMode("normal")}>Normal</button>
         <button className={mode === "blitz" ? "chip active" : "chip"} onClick={() => setMode("blitz")}>Blitz (Timer)</button>
+      </div>
+      <label>Role</label>
+      <div className="mode-choices">
+        <button className={!eSport ? "chip active" : "chip"} onClick={() => setESport(false)}>Standard (Host plays)</button>
+        <button className={eSport ? "chip active" : "chip"} onClick={() => setESport(true)}>E-sport (Host spectates)</button>
       </div>
       <label>Max Players (2-200)</label>
       <input
@@ -342,6 +366,8 @@ function BattleRoyale({ socket, onBack }) {
                   <div
                     key={p.id}
                     className={`lb-row ${p.best_score > 30 ? "hot" : ""} ${p.name === name ? "me" : ""}`}
+                    onClick={() => (isHost && eSport ? requestHistory(p.id) : null)}
+                    style={{ cursor: isHost && eSport ? "pointer" : "default" }}
                   >
                     <span className="rank">{idx + 1}</span>
                     <span className="pname">{p.name}</span>
@@ -353,7 +379,7 @@ function BattleRoyale({ socket, onBack }) {
             </section>
 
             <section className="console">
-              <div className="status">{status}</div>
+              <div className="status">{status}{eSport && isHost ? " | Spectating" : ""}</div>
               {gameOver && (
                 <div className="gameover">
                   <div>Winner: {gameOver.winner}</div>
@@ -382,7 +408,7 @@ function BattleRoyale({ socket, onBack }) {
                           submitGuess();
                         }
                       }}
-                      disabled={!started || !!gameOver}
+                      disabled={!started || !!gameOver || (eSport && isHost)}
                       className="digit-input"
                     />
                   ))}
@@ -390,16 +416,24 @@ function BattleRoyale({ socket, onBack }) {
                 <button
                   className="guess-btn"
                   onClick={submitGuess}
-                  disabled={!started || guess.length !== 4 || !!gameOver}
+                  disabled={!started || guess.length !== 4 || !!gameOver || (eSport && isHost)}
                 >
-                  Submit Guess
+                  {eSport && isHost ? "Spectating" : "Submit Guess"}
                 </button>
               </div>
 
               <div className="history">
-                <div className="history-title">Your Attempts</div>
-                {history.length === 0 && <div className="history-empty">No attempts yet.</div>}
-                {history.map((h) => (
+                <div className="history-title">
+                  {eSport && isHost
+                    ? selectedPlayer
+                      ? `${selectedPlayer.name}'s Attempts`
+                      : "Select a player to view attempts"
+                    : "Your Attempts"}
+                </div>
+                {(eSport && isHost ? selectedHistory : history).length === 0 && (
+                  <div className="history-empty">No attempts yet.</div>
+                )}
+                {(eSport && isHost ? selectedHistory : history).map((h) => (
                   <div key={h.ts} className="history-row">
                     <span className="h-guess">{h.guess}</span>
                     <span className="h-score">+{(h.matches ?? h.cows + h.bulls)} -{h.bulls} | {h.score}</span>
