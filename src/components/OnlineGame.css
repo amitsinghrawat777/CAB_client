@@ -467,19 +467,18 @@
 
 /* ==================== GUESS INPUT ==================== */
 .guess-input-area {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-bottom: 15px;
-    align-items: stretch;
-    width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 18px;
+  width: 100%;
 }
 
 .guess-inputs {
-    display: flex;
-    gap: 10px;
-    flex: 1;
-    justify-content: center;
+  display: flex;
+  gap: 10px;
+  flex: 1;
+  justify-content: center;
 }
 
 .guess-input {
@@ -516,6 +515,7 @@
   cursor: pointer;
   transition: all 0.3s ease;
   white-space: nowrap;
+  min-width: 140px;
 }
 
 .guess-btn:hover:not(:disabled) {
@@ -810,6 +810,12 @@
 @media (max-width: 768px) {
   .playing-phase {
     height: auto;
+  }
+
+  .guess-input-area {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
   }
 
   .game-header {
