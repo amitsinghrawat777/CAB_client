@@ -5,6 +5,7 @@ import "./BattleRoyale.css";
 const randomName = () => `Player-${Math.floor(Math.random() * 900 + 100)}`;
 const COOKIE_KEY = "br_history";
 const COOKIE_MAX_BYTES = 3800;
+const isUniqueDigits = (val) => typeof val === "string" && val.length === 4 && new Set(val).size === 4 && /^\d{4}$/.test(val);
 
 function BattleRoyale({ socket, onBack }) {
   const [roomCode, setRoomCode] = useState(null);
@@ -248,6 +249,10 @@ function BattleRoyale({ socket, onBack }) {
 
   const submitGuess = () => {
     if (!started || !roomCode || !guess || guess.length !== 4) return;
+    if (!isUniqueDigits(guess)) {
+      setError("Use 4 unique digits (no repeats)");
+      return;
+    }
     if (eSport && isHost) return; // host is spectator
     socket.emit("battle_guess", { roomCode, guess });
     setGuess("");
@@ -256,6 +261,7 @@ function BattleRoyale({ socket, onBack }) {
 
   const setDigit = (i, val) => {
     if (!/^\d?$/.test(val)) return;
+    if (val && guess.includes(val) && guess[i] !== val) return; // prevent duplicate digits
     const next = guess.split("");
     next[i] = val;
     const joined = next.join("");
@@ -416,7 +422,7 @@ function BattleRoyale({ socket, onBack }) {
                 <button
                   className="guess-btn"
                   onClick={submitGuess}
-                  disabled={!started || guess.length !== 4 || !!gameOver || (eSport && isHost)}
+                  disabled={!started || guess.length !== 4 || !isUniqueDigits(guess) || !!gameOver || (eSport && isHost)}
                 >
                   {eSport && isHost ? "Spectating" : "Submit Guess"}
                 </button>

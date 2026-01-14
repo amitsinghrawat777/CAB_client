@@ -833,7 +833,8 @@
   .guess-input-area {
     flex-direction: column;
     align-items: stretch;
-    gap: 10px;
+    gap: 16px;
+    width: 100%;
   }
 
   .game-header {
@@ -885,15 +886,21 @@
     font-size: 2rem;
   }
 
+  .guess-inputs {
+    justify-content: center;
+    gap: 16px;
+  }
+
   .guess-input {
-    max-width: 58px;
-    height: 62px;
-    font-size: 1.8rem;
-    line-height: 1.15;
-    border-width: 2px;
-    background: rgba(0, 0, 0, 0.7);
+    flex: 1 1 96px;
+    max-width: 120px;
+    height: 102px;
+    font-size: 2.6rem;
+    line-height: 1.25;
+    border-width: 3px;
+    background: rgba(0, 0, 0, 0.82);
     color: #f5fff9;
-    box-shadow: 0 0 12px rgba(0, 136, 255, 0.28);
+    box-shadow: 0 0 20px rgba(0, 136, 255, 0.38);
   }
 
   .guess-btn {

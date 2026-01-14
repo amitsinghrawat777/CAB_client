@@ -242,12 +242,16 @@
   grid-template-columns: 1fr;
   gap: 10px;
   align-items: center;
+  width: 100%;
 }
 
 .digits {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 12px;
+  max-width: 420px;
+  width: 100%;
+  margin: 0 auto;
 }
 
 .digit-input {
@@ -260,6 +264,7 @@
   border-radius: 10px;
   color: var(--br-text);
   transition: all 0.2s ease;
+  min-height: 60px;
 }
 
 .digit-input:focus {
@@ -335,8 +340,16 @@
   }
 
   .digit-input {
-    font-size: 1.6rem;
-    padding: 12px;
+    font-size: 2.2rem;
+    padding: 18px;
+    border-width: 3px;
+    min-height: 72px;
+  }
+
+  .digits {
+    grid-template-columns: repeat(4, minmax(72px, 1fr));
+    gap: 16px;
+    max-width: none;
   }
 
   .pscore {
