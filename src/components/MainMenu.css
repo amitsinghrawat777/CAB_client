@@ -349,8 +349,14 @@
 
 /* Responsive */
 @media (max-width: 480px) {
+  .main-menu {
+    align-items: flex-start;
+    padding: 24px 16px;
+  }
+
   .menu-content {
-    padding: 20px;
+    padding: 24px 16px;
+    max-width: 420px;
   }
 
   .title {
@@ -368,6 +374,7 @@
 
   .menu-btn {
     padding: 15px 18px;
+    gap: 12px;
   }
 
   .btn-icon {
@@ -377,6 +384,12 @@
 
   .btn-title {
     font-size: 1rem;
+  }
+
+  .menu-footer {
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
   }
 
   .rules-section {

@@ -467,16 +467,19 @@
 
 /* ==================== GUESS INPUT ==================== */
 .guess-input-area {
-  display: flex;
-  gap: 12px;
-  margin-bottom: 15px;
-  align-items: center;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 15px;
+    align-items: stretch;
+    width: 100%;
 }
 
 .guess-inputs {
-  display: flex;
-  gap: 8px;
-  flex: 1;
+    display: flex;
+    gap: 10px;
+    flex: 1;
+    justify-content: center;
 }
 
 .guess-input {
@@ -805,6 +808,10 @@
 
 /* ==================== RESPONSIVE ==================== */
 @media (max-width: 768px) {
+  .playing-phase {
+    height: auto;
+  }
+
   .game-header {
     flex-wrap: wrap;
     gap: 10px;
@@ -823,10 +830,13 @@
   .game-area {
     flex-direction: column;
     padding: 10px;
+    height: auto;
+    overflow-y: auto;
   }
 
   .notebook {
     flex-direction: column;
+    height: auto;
   }
 
   .notebook-divider {
@@ -842,6 +852,7 @@
   .chat-panel {
     width: 100%;
     max-height: 300px;
+    order: 3;
   }
 
   .digit-input, .locked-digit {
@@ -851,14 +862,20 @@
   }
 
   .guess-input {
-    max-width: 45px;
-    height: 50px;
-    font-size: 1.3rem;
+    max-width: 58px;
+    height: 62px;
+    font-size: 1.8rem;
+    line-height: 1.15;
+    border-width: 2px;
+    background: rgba(0, 0, 0, 0.7);
+    color: #f5fff9;
+    box-shadow: 0 0 12px rgba(0, 136, 255, 0.28);
   }
 
   .guess-btn {
-    padding: 12px 15px;
-    font-size: 0.85rem;
+    width: 100%;
+    text-align: center;
+    justify-content: center;
   }
 
   .result-container {
@@ -1270,12 +1287,19 @@
 
   .digit-inputs {
     gap: 8px;
+    width: 100%;
+    justify-content: center;
   }
 
   .digit-input, .locked-digit {
-    width: 50px;
-    height: 60px;
-    font-size: 1.8rem;
+    width: 58px;
+    height: 68px;
+    font-size: 2.1rem;
+    line-height: 1.1;
+    border-width: 2px;
+    background: rgba(0, 0, 0, 0.6);
+    color: #e8fff5;
+    box-shadow: 0 0 12px rgba(0, 255, 136, 0.25);
   }
 
   .lock-btn {
@@ -1286,11 +1310,30 @@
   .game-area {
     padding: 8px;
     gap: 8px;
+    max-height: none;
+    overflow-y: auto;
   }
 
   .column {
     padding: 12px;
     min-height: 200px;
+  }
+
+  .guess-inputs {
+    gap: 10px;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .guess-input {
+    max-width: 52px;
+    height: 58px;
+    font-size: 1.6rem;
+    line-height: 1.1;
+    border-width: 2px;
+    background: rgba(0, 0, 0, 0.6);
+    color: #e8fff5;
+    box-shadow: 0 0 10px rgba(0, 136, 255, 0.25);
   }
 
   .column-header h3 {

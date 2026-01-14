@@ -529,6 +529,11 @@
 
 /* ==================== RESPONSIVE ==================== */
 @media (max-width: 480px) {
+  .offline-game {
+    align-items: stretch;
+    padding: 16px 12px;
+  }
+
   .setup-title, .guess-title {
     font-size: 1.3rem;
   }

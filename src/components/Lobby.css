@@ -347,12 +347,27 @@
 
 /* Responsive */
 @media (max-width: 480px) {
+  .lobby {
+    align-items: flex-start;
+    padding: 16px 12px;
+  }
+
+  .lobby-container {
+    max-width: 100%;
+    padding-top: 8px;
+  }
+
+  .back-btn {
+    position: static;
+    margin-bottom: 12px;
+  }
+
   .lobby-header h1 {
     font-size: 1.8rem;
   }
 
   .lobby-option {
-    padding: 18px;
+    padding: 16px;
   }
 
   .option-icon {
@@ -367,6 +382,7 @@
 
   .mode-selection {
     flex-direction: column;
+    gap: 12px;
   }
 
   .code-char, .code-input {

@@ -5,6 +5,17 @@ import "./OnlineGame.css";
 const GAME_STATE_KEY = "protocol4_gameState";
 
 function OnlineGame({ socket, gameData, onBack }) {
+  // If we somehow render without game data (e.g., storage cleared), return to menu safely
+  useEffect(() => {
+    if (!gameData) {
+      onBack();
+    }
+  }, [gameData, onBack]);
+
+  if (!gameData) {
+    return null;
+  }
+
   const { roomCode, role, gameMode, timeLimit } = gameData;
   
   // Load saved state from sessionStorage
