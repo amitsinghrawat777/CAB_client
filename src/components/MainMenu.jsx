@@ -80,6 +80,18 @@ function MainMenu({ onNavigate }) {
             </span>
             <span className="btn-arrow">→</span>
           </button>
+
+          <button 
+            className="menu-btn battle-btn"
+            onClick={() => onNavigate("battle")}
+          >
+            <span className="btn-icon">👾</span>
+            <span className="btn-text">
+              <span className="btn-title">BATTLE ROYALE</span>
+              <span className="btn-desc">Up to 100 players, one code</span>
+            </span>
+            <span className="btn-arrow">→</span>
+          </button>
         </div>
 
         {/* Game rules */}

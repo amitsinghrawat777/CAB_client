@@ -4,10 +4,11 @@ import MainMenu from "./components/MainMenu";
 import Lobby from "./components/Lobby";
 import OnlineGame from "./components/OnlineGame";
 import OfflineGame from "./components/OfflineGame";
+import BattleRoyale from "./components/BattleRoyale";
 import "./App.css";
 
 // Server URL: Use environment variable or fallback to local dev server
-const SERVER_URL = import.meta.env.VITE_SERVER_URL || "http://localhost:3001";
+const SERVER_URL = import.meta.env.VITE_SERVER_URL //|| "http://localhost:3001";
 
 // SessionStorage keys (cleared when tab is closed)
 const STORAGE_KEYS = {
@@ -50,7 +51,7 @@ function App() {
 
   // Persist screen state
   useEffect(() => {
-    if (screen === "online" || screen === "lobby") {
+    if (screen === "online" || screen === "lobby" || screen === "battle") {
       sessionStorage.setItem(STORAGE_KEYS.SCREEN, screen);
     } else {
       sessionStorage.removeItem(STORAGE_KEYS.SCREEN);
@@ -68,7 +69,7 @@ function App() {
 
   // Initialize socket connection when needed
   useEffect(() => {
-    if (screen === "lobby" || screen === "online") {
+    if (screen === "lobby" || screen === "online" || screen === "battle") {
       if (!socketRef.current) {
         socketRef.current = io.connect(SERVER_URL, {
           transports: ["websocket", "polling"],
@@ -152,6 +153,9 @@ function App() {
           onBack={handleBack}
         />
       );
+
+    case "battle":
+      return <BattleRoyale socket={socketRef.current} onBack={handleBack} />;
     
     case "offline":
       return <OfflineGame onBack={handleBack} />;

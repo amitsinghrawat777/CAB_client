@@ -219,6 +219,17 @@
   box-shadow: 0 0 30px rgba(0, 136, 255, 0.3);
 }
 
+.battle-btn {
+  border-color: rgba(255, 160, 0, 0.4);
+  background: rgba(255, 160, 0, 0.08);
+}
+
+.battle-btn:hover {
+  background: rgba(255, 160, 0, 0.14);
+  border-color: #ffa000;
+  box-shadow: 0 0 30px rgba(255, 160, 0, 0.28);
+}
+
 .btn-icon {
   font-size: 2rem;
   width: 50px;
