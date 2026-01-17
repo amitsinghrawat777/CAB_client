@@ -1,24 +1,23 @@
-:root {
-  font-family: var(--font-mono, 'JetBrains Mono', 'Fira Code', monospace);
-  line-height: 1.5;
-  font-weight: 400;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  background-color: var(--bg-dark, #0a0a0f);
-  color: var(--text-primary, #e0e6ed);
-}
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@400;500;600;700&display=swap');
+
+@import "tailwindcss";
 
 * {
   box-sizing: border-box;
+}
+
+:root {
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
 }
 
 body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
-  background: var(--bg-dark, #0a0a0f);
-  color: var(--text-primary, #e0e6ed);
+  background: #0a0a0f;
+  color: #e0e6ed;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 #root {

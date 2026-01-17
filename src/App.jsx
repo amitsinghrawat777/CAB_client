@@ -5,7 +5,6 @@ import Lobby from "./components/Lobby";
 import OnlineGame from "./components/OnlineGame";
 import OfflineGame from "./components/OfflineGame";
 import BattleRoyale from "./components/BattleRoyale";
-import "./App.css";
 
 // Server URL: Use environment variable or fallback to local dev server
 const SERVER_URL = import.meta.env.VITE_SERVER_URL //|| "http://localhost:3001";

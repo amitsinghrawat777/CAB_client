@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { getSupabaseClient } from "../lib/supabaseClient";
-import "./BattleRoyale.css";
 
 const randomName = () => `Player-${Math.floor(Math.random() * 900 + 100)}`;
 const COOKIE_KEY = "br_history";
@@ -279,123 +278,129 @@ function BattleRoyale({ socket, onBack }) {
   };
 
   const renderMenu = () => (
-    <div className="br-card">
-      <h2>Battle Royale</h2>
-      <p className="br-sub">Choose how you want to enter the arena.</p>
-      <div className="menu-actions">
-        <button className="start-btn" onClick={() => setView("create")}>Create Room</button>
-        <button className="start-btn" onClick={() => setView("join")}>Join Room</button>
+    <div className="max-w-[520px] mx-auto my-12 p-6 bg-br-card border border-br-accent/25 rounded-[14px] shadow-[0_20px_40px_rgba(0,0,0,0.35)] flex flex-col gap-3">
+      <h2 className="text-2xl font-bold">Battle Royale</h2>
+      <p className="text-br-dim -mt-1.5">Choose how you want to enter the arena.</p>
+      <div className="grid grid-cols-[repeat(auto-fit,minmax(180px,1fr))] gap-3 my-2 mb-1">
+        <button className="px-4 py-2.5 rounded-[10px] border border-br-accent/25 bg-gradient-to-br from-br-accent/[0.18] to-[rgba(0,136,255,0.1)] text-br-text cursor-pointer font-bold tracking-wide transition-all duration-200 hover:-translate-y-px hover:shadow-[0_0_16px_rgba(0,255,136,0.25)] hover:border-br-accent" onClick={() => setView("create")}>Create Room</button>
+        <button className="px-4 py-2.5 rounded-[10px] border border-br-accent/25 bg-gradient-to-br from-br-accent/[0.18] to-[rgba(0,136,255,0.1)] text-br-text cursor-pointer font-bold tracking-wide transition-all duration-200 hover:-translate-y-px hover:shadow-[0_0_16px_rgba(0,255,136,0.25)] hover:border-br-accent" onClick={() => setView("join")}>Join Room</button>
       </div>
-      <div className="name-field">
+      <div className="flex flex-col gap-1.5">
         <label>Your Name</label>
-        <input value={name} onChange={(e) => setName(e.target.value)} />
+        <input className="px-3 py-2.5 bg-black/45 border border-white/12 rounded-[10px] text-br-text" value={name} onChange={(e) => setName(e.target.value)} />
       </div>
-      {error && <div className="error-text">{error}</div>}
+      {error && <div className="text-[#ffb3b3] text-sm">{error}</div>}
     </div>
   );
 
   const renderCreate = () => (
-    <div className="br-card">
-      <h3>Create Room</h3>
+    <div className="max-w-[520px] mx-auto my-12 p-6 bg-br-card border border-br-accent/25 rounded-[14px] shadow-[0_20px_40px_rgba(0,0,0,0.35)] flex flex-col gap-3">
+      <h3 className="text-xl font-bold">Create Room</h3>
       <label>Mode</label>
-      <div className="mode-choices">
-        <button className={mode === "normal" ? "chip active" : "chip"} onClick={() => setMode("normal")}>Normal</button>
-        <button className={mode === "blitz" ? "chip active" : "chip"} onClick={() => setMode("blitz")}>Blitz (Timer)</button>
+      <div className="flex gap-2.5 flex-wrap">
+        <button className={`px-3.5 py-2.5 rounded-full border text-br-text cursor-pointer transition-all duration-200 ${mode === "normal" ? "border-br-accent bg-br-accent/15 shadow-[0_0_18px_rgba(0,255,136,0.2)]" : "border-white/20 bg-white/5"}`} onClick={() => setMode("normal")}>Normal</button>
+        <button className={`px-3.5 py-2.5 rounded-full border text-br-text cursor-pointer transition-all duration-200 ${mode === "blitz" ? "border-br-accent bg-br-accent/15 shadow-[0_0_18px_rgba(0,255,136,0.2)]" : "border-white/20 bg-white/5"}`} onClick={() => setMode("blitz")}>Blitz (Timer)</button>
       </div>
       <label>Role</label>
-      <div className="mode-choices">
-        <button className={!eSport ? "chip active" : "chip"} onClick={() => setESport(false)}>Standard (Host plays)</button>
-        <button className={eSport ? "chip active" : "chip"} onClick={() => setESport(true)}>E-sport (Host spectates)</button>
+      <div className="flex gap-2.5 flex-wrap">
+        <button className={`px-3.5 py-2.5 rounded-full border text-br-text cursor-pointer transition-all duration-200 ${!eSport ? "border-br-accent bg-br-accent/15 shadow-[0_0_18px_rgba(0,255,136,0.2)]" : "border-white/20 bg-white/5"}`} onClick={() => setESport(false)}>Standard (Host plays)</button>
+        <button className={`px-3.5 py-2.5 rounded-full border text-br-text cursor-pointer transition-all duration-200 ${eSport ? "border-br-accent bg-br-accent/15 shadow-[0_0_18px_rgba(0,255,136,0.2)]" : "border-white/20 bg-white/5"}`} onClick={() => setESport(true)}>E-sport (Host spectates)</button>
       </div>
       <label>Max Players (2-200)</label>
       <input
+        className="px-3 py-2.5 bg-black/45 border border-white/12 rounded-[10px] text-br-text"
         type="number"
         min={2}
         max={200}
         value={maxPlayers}
         onChange={(e) => setMaxPlayers(Number(e.target.value))}
       />
-      <button className="start-btn" onClick={createRoom}>Create & Join</button>
-      <button className="back-btn" onClick={() => setView("menu")}>Back</button>
-      {error && <div className="error-text">{error}</div>}
+      <button className="px-4 py-2.5 rounded-[10px] border border-br-accent/25 bg-gradient-to-br from-br-accent/[0.18] to-[rgba(0,136,255,0.1)] text-br-text cursor-pointer font-bold tracking-wide transition-all duration-200 hover:-translate-y-px hover:shadow-[0_0_16px_rgba(0,255,136,0.25)] hover:border-br-accent" onClick={createRoom}>Create & Join</button>
+      <button className="px-4 py-2.5 rounded-[10px] border border-white/20 bg-transparent text-br-text cursor-pointer font-bold tracking-wide transition-all duration-200 hover:-translate-y-px hover:shadow-[0_0_16px_rgba(0,255,136,0.25)] hover:border-br-accent" onClick={() => setView("menu")}>Back</button>
+      {error && <div className="text-[#ffb3b3] text-sm">{error}</div>}
     </div>
   );
 
   const renderJoin = () => (
-    <div className="br-card">
-      <h3>Join Room</h3>
+    <div className="max-w-[520px] mx-auto my-12 p-6 bg-br-card border border-br-accent/25 rounded-[14px] shadow-[0_20px_40px_rgba(0,0,0,0.35)] flex flex-col gap-3">
+      <h3 className="text-xl font-bold">Join Room</h3>
       <label>Room Code</label>
       <input
+        className="px-3 py-2.5 bg-black/45 border border-white/12 rounded-[10px] text-br-text"
         type="text"
         maxLength={4}
         value={joinCode}
         onChange={(e) => setJoinCode(e.target.value.toUpperCase())}
       />
       <label>Your Name</label>
-      <input value={name} onChange={(e) => setName(e.target.value)} />
-      <button className="start-btn" onClick={joinRoom}>Join</button>
-      <button className="back-btn" onClick={() => setView("menu")}>Back</button>
-      {error && <div className="error-text">{error}</div>}
+      <input className="px-3 py-2.5 bg-black/45 border border-white/12 rounded-[10px] text-br-text" value={name} onChange={(e) => setName(e.target.value)} />
+      <button className="px-4 py-2.5 rounded-[10px] border border-br-accent/25 bg-gradient-to-br from-br-accent/[0.18] to-[rgba(0,136,255,0.1)] text-br-text cursor-pointer font-bold tracking-wide transition-all duration-200 hover:-translate-y-px hover:shadow-[0_0_16px_rgba(0,255,136,0.25)] hover:border-br-accent" onClick={joinRoom}>Join</button>
+      <button className="px-4 py-2.5 rounded-[10px] border border-white/20 bg-transparent text-br-text cursor-pointer font-bold tracking-wide transition-all duration-200 hover:-translate-y-px hover:shadow-[0_0_16px_rgba(0,255,136,0.25)] hover:border-br-accent" onClick={() => setView("menu")}>Back</button>
+      {error && <div className="text-[#ffb3b3] text-sm">{error}</div>}
     </div>
   );
 
   return (
-    <div className="battle-royale">
+    <div className="min-h-screen bg-[radial-gradient(circle_at_20%_20%,rgba(0,255,136,0.06),transparent_35%),radial-gradient(circle_at_80%_0%,rgba(0,136,255,0.05),transparent_30%),#0a0a0f] text-br-text font-jetbrains flex flex-col">
       {view === "menu" && renderMenu()}
       {view === "create" && renderCreate()}
       {view === "join" && renderJoin()}
 
       {view !== "menu" && view !== "create" && view !== "join" && (
         <>
-          <header className="br-header">
-            <div className="room-pill">ROOM: {roomCode || "..."}</div>
-            <div className="player-pill">YOU: {name}</div>
-            <div className="player-pill">MODE: {mode.toUpperCase()}</div>
-            {timeLeft !== null && <div className="player-pill">⏱ {timeLeft}s</div>}
-            {isHost && !started && (
-              <button className="start-btn" onClick={startGame}>
-                Start Battle
-              </button>
-            )}
-            <button className="back-btn" onClick={onBack}>Exit</button>
+          <header className="grid grid-cols-[1fr_auto] items-center gap-3 p-4 border-b border-white/8 bg-black/35 max-[480px]:grid-cols-1">
+            <div className="flex items-center gap-3 flex-wrap max-[480px]:w-full">
+              <div className="px-3.5 py-2.5 bg-br-card border border-br-accent/25 rounded-[10px] text-[0.95rem]">ROOM: {roomCode || "..."}</div>
+              <div className="px-3.5 py-2.5 bg-br-card border border-br-accent/25 rounded-[10px] text-[0.95rem]">YOU: {name}</div>
+              <div className="px-3.5 py-2.5 bg-br-card border border-br-accent/25 rounded-[10px] text-[0.95rem]">MODE: {mode.toUpperCase()}</div>
+              {timeLeft !== null && <div className="px-3.5 py-2.5 bg-br-card border border-br-accent/25 rounded-[10px] text-[0.95rem]">⏱ {timeLeft}s</div>}
+            </div>
+            <div className="flex items-center gap-3 shrink-0 max-[480px]:w-full max-[480px]:justify-end">
+              {isHost && !started && (
+                <button className="px-4 py-2.5 rounded-[10px] border border-br-accent/25 bg-gradient-to-br from-br-accent/[0.18] to-[rgba(0,136,255,0.1)] text-br-text cursor-pointer font-bold tracking-wide transition-all duration-200 hover:-translate-y-px hover:shadow-[0_0_16px_rgba(0,255,136,0.25)] hover:border-br-accent" onClick={startGame}>
+                  Start Battle
+                </button>
+              )}
+              <button className="px-4 py-2.5 rounded-[10px] border border-white/20 bg-transparent text-br-text cursor-pointer font-bold tracking-wide transition-all duration-200 hover:-translate-y-px hover:shadow-[0_0_16px_rgba(0,255,136,0.25)] hover:border-br-accent" onClick={onBack}>Exit</button>
+            </div>
           </header>
 
-          <main className="br-main">
-            <section className="leaderboard">
-              <div className="lb-header">
+          <main className="grid grid-cols-1 gap-4 p-4 min-[900px]:grid-cols-[1.1fr_1fr] min-[900px]:items-start">
+            <section className="bg-br-card border border-br-accent/25 rounded-xl overflow-hidden shadow-[0_10px_30px_rgba(0,0,0,0.35)]">
+              <div className="grid grid-cols-[70px_1fr_140px] px-3.5 py-3 items-center gap-2.5 bg-white/5 uppercase tracking-widest font-bold text-[0.8rem] text-br-dim max-[480px]:grid-cols-[60px_1fr_100px]">
                 <span>Rank</span>
                 <span>Player</span>
                 <span>Score</span>
               </div>
-              <div className="lb-body">
+              <div className="max-h-[360px] overflow-y-auto">
                 {leaderboard.map((p, idx) => (
                   <div
                     key={p.id}
-                    className={`lb-row ${p.best_score > 30 ? "hot" : ""} ${p.name === name ? "me" : ""}`}
+                    className={`grid grid-cols-[70px_1fr_140px] px-3.5 py-3 items-center gap-2.5 border-t border-white/5 max-[480px]:grid-cols-[60px_1fr_100px] ${p.best_score > 30 ? "bg-br-hot/12 border-l-[3px] border-l-br-hot text-[#ffdce5]" : ""} ${p.name === name ? "bg-br-accent/[0.07] border-l-[3px] border-l-br-accent" : ""}`}
                     onClick={() => (isHost && eSport ? requestHistory(p.id) : null)}
                     style={{ cursor: isHost && eSport ? "pointer" : "default" }}
                   >
-                    <span className="rank">{idx + 1}</span>
-                    <span className="pname">{p.name}</span>
-                    <span className="pscore">{p.best_score} (moves {p.moves})</span>
+                    <span className="font-bold text-br-dim">{idx + 1}</span>
+                    <span className="font-bold tracking-wider">{p.name}</span>
+                    <span className="justify-self-end text-[0.95rem] text-br-info max-[480px]:text-[0.85rem]">{p.best_score} (moves {p.moves})</span>
                   </div>
                 ))}
-                {leaderboard.length === 0 && <div className="lb-empty">Waiting for players...</div>}
+                {leaderboard.length === 0 && <div className="p-4 text-center text-br-dim">Waiting for players...</div>}
               </div>
             </section>
 
-            <section className="console">
-              <div className="status">{status}{eSport && isHost ? " | Spectating" : ""}</div>
+            <section className="bg-br-panel border border-white/[0.06] rounded-xl p-4 flex flex-col gap-3.5 shadow-[0_10px_28px_rgba(0,0,0,0.3)]">
+              <div className="text-br-dim text-[0.95rem]">{status}{eSport && isHost ? " | Spectating" : ""}</div>
               {gameOver && (
-                <div className="gameover">
+                <div className="bg-black/35 border border-white/12 rounded-[10px] p-3 text-br-text">
                   <div>Winner: {gameOver.winner}</div>
                   <div>Code: {gameOver.secret}</div>
                   {gameOver.reason === "timeout" && <div>Timer expired</div>}
                 </div>
               )}
 
-              <div className="guess-box">
-                <div className="digits">
+              <div className="grid grid-cols-1 gap-2.5 items-center w-full min-[900px]:grid-cols-[auto_180px] max-[480px]:grid-cols-1">
+                <div className="grid grid-cols-4 gap-3 max-w-[420px] w-full mx-auto max-[480px]:grid-cols-[repeat(4,minmax(72px,1fr))] max-[480px]:gap-4 max-[480px]:max-w-none">
                   {[0, 1, 2, 3].map((i) => (
                     <input
                       key={i}
@@ -415,12 +420,12 @@ function BattleRoyale({ socket, onBack }) {
                         }
                       }}
                       disabled={!started || !!gameOver || (eSport && isHost)}
-                      className="digit-input"
+                      className="text-center text-[2.2rem] font-bold p-0 bg-black/80 border-[3px] border-br-accent/60 rounded-xl text-br-text transition-all duration-200 min-h-[75px] min-w-[75px] shadow-[0_0_20px_rgba(0,255,136,0.35)] caret-br-accent leading-none focus:outline-none focus:border-br-accent focus:shadow-[0_0_28px_rgba(0,255,136,0.5)] focus:bg-black/90 focus:scale-105 max-[480px]:text-[2.6rem] max-[480px]:border-[3px] max-[480px]:min-h-[85px] max-[480px]:min-w-[80px] max-[480px]:bg-black/[0.88] max-[480px]:shadow-[0_0_24px_rgba(0,255,136,0.5)] max-[480px]:focus:shadow-[0_0_32px_rgba(0,255,136,0.65)] max-[480px]:focus:scale-[1.03]"
                     />
                   ))}
                 </div>
                 <button
-                  className="guess-btn"
+                  className="px-4 py-2.5 rounded-[10px] border border-br-accent/25 bg-gradient-to-br from-br-accent/[0.18] to-[rgba(0,136,255,0.1)] text-br-text cursor-pointer font-bold tracking-wide transition-all duration-200 hover:-translate-y-px hover:shadow-[0_0_16px_rgba(0,255,136,0.25)] hover:border-br-accent disabled:opacity-50 disabled:cursor-not-allowed"
                   onClick={submitGuess}
                   disabled={!started || guess.length !== 4 || !isUniqueDigits(guess) || !!gameOver || (eSport && isHost)}
                 >
@@ -428,8 +433,8 @@ function BattleRoyale({ socket, onBack }) {
                 </button>
               </div>
 
-              <div className="history">
-                <div className="history-title">
+              <div className="bg-black/40 border border-white/8 rounded-[10px] p-3 max-h-[260px] overflow-y-auto flex flex-col gap-2.5 min-[900px]:max-h-[320px]">
+                <div className="font-bold text-br-dim">
                   {eSport && isHost
                     ? selectedPlayer
                       ? `${selectedPlayer.name}'s Attempts`
@@ -437,12 +442,12 @@ function BattleRoyale({ socket, onBack }) {
                     : "Your Attempts"}
                 </div>
                 {(eSport && isHost ? selectedHistory : history).length === 0 && (
-                  <div className="history-empty">No attempts yet.</div>
+                  <div className="text-center text-br-dim">No attempts yet.</div>
                 )}
                 {(eSport && isHost ? selectedHistory : history).map((h) => (
-                  <div key={h.ts} className="history-row">
-                    <span className="h-guess">{h.guess}</span>
-                    <span className="h-score">+{(h.matches ?? h.cows + h.bulls)} -{h.bulls} | {h.score}</span>
+                  <div key={h.ts} className="flex justify-between px-2.5 py-2 rounded-lg bg-br-accent/[0.06] border border-br-accent/20">
+                    <span className="tracking-[0.12em] font-bold">{h.guess}</span>
+                    <span className="text-br-info font-semibold">+{(h.matches ?? h.cows + h.bulls)} -{h.bulls} | {h.score}</span>
                   </div>
                 ))}
               </div>
