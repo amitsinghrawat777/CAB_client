@@ -361,7 +361,7 @@ function OnlineGame({ socket, gameData, onBack }) {
               ✕
             </button>
             <span className="font-['Courier_New',monospace] text-xs md:text-sm text-white/60 px-2 md:px-3 py-1 md:py-1.5 bg-white/5 rounded">ROOM: {roomCode}</span>
-            <span className="font-['Courier_New',monospace] text-[0.65rem] md:text-xs text-br-info px-2 md:px-2.5 py-1 border border-br-info/30 rounded">{gameMode.toUpperCase()}</span>
+            <span className="font-['Courier_New',monospace] text-xs md:text-xs text-br-info px-2 md:px-2.5 py-1 border border-br-info/30 rounded">{gameMode.toUpperCase()}</span>
           </div>
           <div className="flex items-center gap-2 md:gap-4">
             <span className={`font-['Courier_New',monospace] text-xs md:text-sm font-bold px-2 md:px-3.5 py-1 md:py-1.5 rounded border ${role === "Player 1" ? "bg-gradient-to-br from-br-accent/20 to-br-accent/10 text-br-accent border-br-accent/30" : "bg-gradient-to-br from-br-info/20 to-br-info/10 text-br-info border-br-info/30"}`}>{role.toUpperCase()}</span>
@@ -554,7 +554,7 @@ function OnlineGame({ socket, gameData, onBack }) {
           <div className="flex-1 flex flex-col p-2 md:p-5 overflow-hidden bg-gradient-to-br from-br-info/[0.03] to-transparent">
             <div className="text-center mb-2 md:mb-4 pb-2 md:pb-4 border-b border-white/10">
               <h3 className="font-['Courier_New',monospace] text-sm md:text-xl text-br-info my-0 mb-1">🛡️ DEFENSE</h3>
-              <span className="text-[0.65rem] md:text-xs text-white/40">Opponent's attacks</span>
+              <span className="text-xs md:text-xs text-white/40">Opponent's attacks</span>
             </div>
             <div className="flex-1 overflow-y-auto p-1 md:p-2.5 bg-black/30 rounded-lg">
               {defenseLog.length === 0 ? (
@@ -562,7 +562,7 @@ function OnlineGame({ socket, gameData, onBack }) {
               ) : (
                 defenseLog.map((log, i) => (
                   <div key={i} className="flex items-center px-2 md:px-4 py-2 md:py-3 mb-1 md:mb-2 rounded-md animate-[slideIn_0.3s_ease] bg-br-info/10 border-l-[3px] border-br-info">
-                    <span className="font-['Courier_New',monospace] text-[0.65rem] md:text-xs text-white/40 mr-1 md:mr-3 min-w-[20px] md:min-w-[25px]">#{defenseLog.length - i}</span>
+                    <span className="font-['Courier_New',monospace] text-xs md:text-xs text-white/40 mr-1 md:mr-3 min-w-[20px] md:min-w-[25px]">#{defenseLog.length - i}</span>
                     <span className="font-['Courier_New',monospace] text-base md:text-xl font-bold tracking-[3px] md:tracking-[5px] flex-1 text-white">{log.guess}</span>
                     <div className="flex gap-1 md:gap-2.5">
                       <span className="font-['Courier_New',monospace] font-bold text-sm md:text-base text-yellow-400">+{log.found}</span>
@@ -583,7 +583,7 @@ function OnlineGame({ socket, gameData, onBack }) {
           <div className="flex-1 flex flex-col p-2 md:p-5 overflow-hidden bg-gradient-to-bl from-transparent to-br-accent/[0.03]">
             <div className="text-center mb-2 md:mb-4 pb-2 md:pb-4 border-b border-white/10">
               <h3 className="font-['Courier_New',monospace] text-sm md:text-xl text-br-accent my-0 mb-1">⚔️ ATTACK</h3>
-              <span className="text-[0.65rem] md:text-xs text-white/40">Your attempts</span>
+              <span className="text-xs md:text-xs text-white/40">Your attempts</span>
             </div>
             
             <div className="flex flex-col md:flex-row items-center gap-2 md:gap-3 mb-2 md:mb-5 w-full">
@@ -632,7 +632,7 @@ function OnlineGame({ socket, gameData, onBack }) {
               ) : (
                 attackLog.map((log, i) => (
                   <div key={i} className="flex items-center px-2 md:px-4 py-2 md:py-3 mb-1 md:mb-2 rounded-md animate-[slideIn_0.3s_ease] bg-br-accent/10 border-l-[3px] border-br-accent">
-                    <span className="font-['Courier_New',monospace] text-[0.65rem] md:text-xs text-white/40 mr-1 md:mr-3 min-w-[20px] md:min-w-[25px]">#{attackLog.length - i}</span>
+                    <span className="font-['Courier_New',monospace] text-xs md:text-xs text-white/40 mr-1 md:mr-3 min-w-[20px] md:min-w-[25px]">#{attackLog.length - i}</span>
                     <span className="font-['Courier_New',monospace] text-base md:text-xl font-bold tracking-[3px] md:tracking-[5px] flex-1 text-white">{log.guess}</span>
                     <div className="flex gap-1 md:gap-2.5">
                       <span className="font-['Courier_New',monospace] font-bold text-sm md:text-base text-yellow-400">+{log.found}</span>
@@ -658,14 +658,14 @@ function OnlineGame({ socket, gameData, onBack }) {
                   key={i} 
                   className={`max-w-[85%] px-2.5 md:px-3 py-2 md:py-2.5 rounded-lg text-xs md:text-sm ${
                     msg.sender === "SYSTEM" 
-                      ? "self-center bg-orange-500/10 border border-orange-500/30 max-w-[95%] text-center text-[0.65rem] md:text-xs text-orange-500" 
+                      ? "self-center bg-orange-500/10 border border-orange-500/30 max-w-[95%] text-center text-xs md:text-xs text-orange-500" 
                       : msg.sender === role 
                         ? "self-end bg-br-accent/10 border border-br-accent/30" 
                         : "self-start bg-br-info/10 border border-br-info/30"
                   }`}
                 >
                   {msg.sender !== "SYSTEM" && (
-                    <span className="block font-['Courier_New',monospace] text-[0.65rem] md:text-xs text-white/50 mb-1">{msg.sender === role ? "You" : "Opponent"}</span>
+                    <span className="block font-['Courier_New',monospace] text-xs md:text-xs text-white/50 mb-1">{msg.sender === role ? "You" : "Opponent"}</span>
                   )}
                   <span className="text-white/90">{msg.message}</span>
                 </div>
