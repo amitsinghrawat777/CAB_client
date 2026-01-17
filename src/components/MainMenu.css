@@ -227,7 +227,7 @@
 .battle-btn:hover {
   background: rgba(255, 160, 0, 0.14);
   border-color: #ffa000;
-  box-shadow: 0 0 30px rgba(255, 160, 0, 0.28);
+  box-shadow: 0 0 30px rgba(255, 160, 0, 0.3);
 }
 
 .btn-icon {

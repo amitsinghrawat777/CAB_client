@@ -889,7 +889,7 @@
 /* Touch optimizations */
 @media (hover: none) and (pointer: coarse) {
   .digit-input {
-    font-size: 1.8rem;
+    font-size: 2rem;
     caret-color: #00ff88;
   }
 

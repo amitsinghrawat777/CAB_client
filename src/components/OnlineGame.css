@@ -892,15 +892,12 @@
   }
 
   .guess-input {
-    flex: 1 1 96px;
-    max-width: 120px;
-    height: 102px;
-    font-size: 2.6rem;
-    line-height: 1.25;
-    border-width: 3px;
-    background: rgba(0, 0, 0, 0.82);
-    color: #f5fff9;
-    box-shadow: 0 0 20px rgba(0, 136, 255, 0.38);
+    flex: 1 1 80px;
+    max-width: 90px;
+    height: 85px;
+    font-size: 2.2rem;
+    line-height: 1.2;
+    border-width: 2px;
   }
 
   .guess-btn {
@@ -1272,9 +1269,9 @@
   }
 
   .guess-input {
-    max-width: 50px;
-    height: 55px;
-    font-size: 1.4rem;
+    max-width: 60px;
+    height: 70px;
+    font-size: 1.8rem;
   }
 
   .chat-panel {
@@ -1325,12 +1322,9 @@
   .digit-input, .locked-digit {
     width: 58px;
     height: 68px;
-    font-size: 2.1rem;
-    line-height: 1.1;
+    font-size: 2rem;
+    line-height: 1.2;
     border-width: 2px;
-    background: rgba(0, 0, 0, 0.6);
-    color: #e8fff5;
-    box-shadow: 0 0 12px rgba(0, 255, 136, 0.25);
   }
 
   .lock-btn {
@@ -1358,13 +1352,10 @@
 
   .guess-input {
     max-width: 64px;
-    height: 68px;
-    font-size: 1.9rem;
-    line-height: 1.1;
+    height: 72px;
+    font-size: 2rem;
+    line-height: 1.2;
     border-width: 2px;
-    background: rgba(0, 0, 0, 0.6);
-    color: #e8fff5;
-    box-shadow: 0 0 10px rgba(0, 136, 255, 0.25);
   }
 
   .column-header h3 {
