@@ -259,18 +259,20 @@
   font-size: 1.8rem;
   font-weight: 700;
   padding: 14px;
-  background: rgba(0, 0, 0, 0.5);
-  border: 2px solid rgba(0, 255, 136, 0.35);
+  background: rgba(0, 0, 0, 0.7);
+  border: 2px solid rgba(0, 255, 136, 0.5);
   border-radius: 10px;
   color: var(--br-text);
   transition: all 0.2s ease;
   min-height: 60px;
+  box-shadow: 0 0 12px rgba(0, 255, 136, 0.25);
 }
 
 .digit-input:focus {
   outline: none;
   border-color: var(--br-accent);
-  box-shadow: 0 0 18px rgba(0, 255, 136, 0.3);
+  box-shadow: 0 0 20px rgba(0, 255, 136, 0.4);
+  background: rgba(0, 0, 0, 0.85);
 }
 
 .history {
@@ -344,6 +346,12 @@
     padding: 18px;
     border-width: 3px;
     min-height: 72px;
+    background: rgba(0, 0, 0, 0.85);
+    box-shadow: 0 0 18px rgba(0, 255, 136, 0.4);
+  }
+
+  .digit-input:focus {
+    box-shadow: 0 0 25px rgba(0, 255, 136, 0.55);
   }
 
   .digits {

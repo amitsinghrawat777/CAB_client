@@ -79,8 +79,8 @@
 .digit-input {
   width: 65px;
   height: 80px;
-  background: rgba(0, 255, 136, 0.05);
-  border: 2px solid rgba(0, 255, 136, 0.3);
+  background: rgba(0, 0, 0, 0.7);
+  border: 2px solid rgba(0, 255, 136, 0.5);
   border-radius: 8px;
   color: #00ff88;
   font-family: 'Courier New', monospace;
@@ -89,24 +89,26 @@
   text-align: center;
   outline: none;
   transition: all 0.3s ease;
+  box-shadow: 0 0 12px rgba(0, 255, 136, 0.25);
 }
 
 .digit-input:focus {
   border-color: #00ff88;
-  background: rgba(0, 255, 136, 0.1);
-  box-shadow: 0 0 30px rgba(0, 255, 136, 0.3);
+  background: rgba(0, 0, 0, 0.85);
+  box-shadow: 0 0 30px rgba(0, 255, 136, 0.4);
 }
 
 .digit-input.guess {
-  border-color: rgba(0, 136, 255, 0.3);
+  border-color: rgba(0, 136, 255, 0.5);
   color: #0088ff;
-  background: rgba(0, 136, 255, 0.05);
+  background: rgba(0, 0, 0, 0.7);
+  box-shadow: 0 0 12px rgba(0, 136, 255, 0.25);
 }
 
 .digit-input.guess:focus {
   border-color: #0088ff;
-  background: rgba(0, 136, 255, 0.1);
-  box-shadow: 0 0 30px rgba(0, 136, 255, 0.3);
+  background: rgba(0, 0, 0, 0.85);
+  box-shadow: 0 0 30px rgba(0, 136, 255, 0.4);
 }
 
 .submit-btn {
