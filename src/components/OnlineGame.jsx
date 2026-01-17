@@ -59,9 +59,18 @@ function OnlineGame({ socket, gameData, onBack }) {
   const [chatInput, setChatInput] = useState("");
   const [chatOpen, setChatOpen] = useState(false);
   const chatRef = useRef(null);
+  const lastSystemRef = useRef({ type: null, at: 0 });
 
   const pushSystemMessage = (message) => {
     setChatMessages((prev) => [...prev, { sender: "SYSTEM", message }]);
+  };
+
+  const pushSystemMessageOnce = (type, message, cooldownMs = 4000) => {
+    const now = Date.now();
+    const { type: lastType, at } = lastSystemRef.current;
+    if (lastType === type && now - at < cooldownMs) return;
+    lastSystemRef.current = { type, at: now };
+    pushSystemMessage(message);
   };
   
   // Game result
@@ -175,18 +184,12 @@ function OnlineGame({ socket, gameData, onBack }) {
 
     // Opponent temporarily disconnected - may reconnect
     socket.on("opponent_disconnected_temp", () => {
-      setChatMessages((prev) => [
-        ...prev,
-        { sender: "SYSTEM", message: "⚠️ Opponent disconnected. Waiting 30s for reconnection..." }
-      ]);
+      pushSystemMessageOnce("disconnect_temp", "⚠️ Opponent disconnected. Waiting 30s for reconnection...");
     });
 
     // Opponent reconnected
     socket.on("opponent_reconnected", () => {
-      setChatMessages((prev) => [
-        ...prev,
-        { sender: "SYSTEM", message: "✅ Opponent reconnected!" }
-      ]);
+      pushSystemMessageOnce("reconnected", "✅ Opponent reconnected!");
     });
 
     socket.on("rematch_requested", () => {
@@ -512,9 +515,9 @@ function OnlineGame({ socket, gameData, onBack }) {
 
   // ==================== PLAYING PHASE ====================
   return (
-    <div className="min-h-screen h-screen bg-br-bg flex flex-col">
+    <div className="min-h-screen h-screen bg-br-bg flex flex-col online-shell">
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:justify-between items-center px-3 md:px-6 py-3 md:py-4 bg-black/50 border-b border-br-accent/20 gap-2 md:gap-0">
+      <div className="flex flex-col md:flex-row md:justify-between items-center px-3 md:px-6 py-3 md:py-4 bg-black/50 border-b border-br-accent/20 gap-2 md:gap-0 online-header">
         <div className="flex items-center gap-2 md:gap-4 w-full md:w-auto justify-between md:justify-start">
           <button className="w-8 h-8 md:w-9 md:h-9 bg-br-hot/10 border border-br-hot/30 rounded-md text-br-hot text-lg md:text-xl font-bold cursor-pointer transition-all duration-200 hover:bg-br-hot/20 hover:border-br-hot hover:shadow-[0_0_15px_rgba(255,0,128,0.3)] hover:scale-105 flex items-center justify-center" onClick={exitGame} title="Exit Game">
             ✕
@@ -547,11 +550,11 @@ function OnlineGame({ socket, gameData, onBack }) {
       </div>
 
       {/* Main game area */}
-      <div className="flex-1 flex flex-col md:flex-row p-2 md:p-5 gap-2 md:gap-5 overflow-hidden">
+      <div className="flex-1 flex flex-col md:flex-row p-2 md:p-5 gap-2 md:gap-5 overflow-hidden online-layout">
         {/* Notebook */}
-        <div className="flex-1 flex flex-col md:flex-row bg-gradient-to-b from-[#121218] to-[#0d0d12] rounded-xl border border-white/10 overflow-hidden">
+        <div className="flex-1 flex flex-col md:flex-row bg-gradient-to-b from-[#121218] to-[#0d0d12] rounded-xl border border-white/10 overflow-hidden online-board">
           {/* Defense Column */}
-          <div className="flex-1 flex flex-col p-2 md:p-5 overflow-hidden bg-gradient-to-br from-br-info/[0.03] to-transparent">
+          <div className="flex-1 flex flex-col p-2 md:p-5 overflow-hidden bg-gradient-to-br from-br-info/[0.03] to-transparent online-column">
             <div className="text-center mb-2 md:mb-4 pb-2 md:pb-4 border-b border-white/10">
               <h3 className="font-['Courier_New',monospace] text-sm md:text-xl text-br-info my-0 mb-1">🛡️ DEFENSE</h3>
               <span className="text-xs text-white/40">Opponent's attacks</span>
@@ -575,12 +578,12 @@ function OnlineGame({ socket, gameData, onBack }) {
           </div>
 
           {/* Divider */}
-          <div className="h-px md:h-auto md:w-px bg-white/10 relative">
+          <div className="h-px md:h-auto md:w-px bg-white/10 relative online-divider">
             <div className="hidden md:block absolute top-[20%] bottom-[20%] left-0 w-px bg-gradient-to-b from-transparent via-br-accent/50 to-transparent"></div>
           </div>
 
           {/* Attack Column */}
-          <div className="flex-1 flex flex-col p-2 md:p-5 overflow-hidden bg-gradient-to-bl from-transparent to-br-accent/[0.03]">
+          <div className="flex-1 flex flex-col p-2 md:p-5 overflow-hidden bg-gradient-to-bl from-transparent to-br-accent/[0.03] online-column">
             <div className="text-center mb-2 md:mb-4 pb-2 md:pb-4 border-b border-white/10">
               <h3 className="font-['Courier_New',monospace] text-sm md:text-xl text-br-accent my-0 mb-1">⚔️ ATTACK</h3>
               <span className="text-xs text-white/40">Your attempts</span>
@@ -647,7 +650,7 @@ function OnlineGame({ socket, gameData, onBack }) {
 
         {/* Chat Panel */}
         {chatOpen && (
-          <div className="absolute md:relative bottom-0 left-0 right-0 md:w-[300px] h-[50vh] md:h-auto bg-black/95 md:bg-black/50 border-t md:border border-white/10 md:rounded-xl flex flex-col z-50">
+          <div className="absolute md:relative bottom-0 left-0 right-0 md:w-[300px] h-[50vh] md:h-auto bg-black/95 md:bg-black/50 border-t md:border border-white/10 md:rounded-xl flex flex-col z-50 online-chat">
             <div className="flex justify-between items-center px-4 py-3 md:py-4 border-b border-white/10 font-['Courier_New',monospace] text-xs md:text-sm text-br-accent">
               <span>💬 COMMS</span>
               <button className="bg-none border-none text-white/50 text-xl cursor-pointer hover:text-br-hot" onClick={() => setChatOpen(false)}>×</button>
