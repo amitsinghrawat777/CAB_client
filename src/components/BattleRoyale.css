@@ -256,24 +256,27 @@
 
 .digit-input {
   text-align: center;
-  font-size: 1.8rem;
+  font-size: 2.2rem;
   font-weight: 700;
-  padding: 14px;
-  background: rgba(0, 0, 0, 0.7);
-  border: 2px solid rgba(0, 255, 136, 0.5);
-  border-radius: 10px;
+  padding: 16px;
+  background: rgba(0, 0, 0, 0.8);
+  border: 3px solid rgba(0, 255, 136, 0.6);
+  border-radius: 12px;
   color: var(--br-text);
   transition: all 0.2s ease;
-  min-height: 60px;
-  box-shadow: 0 0 12px rgba(0, 255, 136, 0.25);
+  min-height: 75px;
+  min-width: 75px;
+  box-shadow: 0 0 20px rgba(0, 255, 136, 0.35);
   caret-color: var(--br-accent);
+  line-height: 1;
 }
 
 .digit-input:focus {
   outline: none;
   border-color: var(--br-accent);
-  box-shadow: 0 0 20px rgba(0, 255, 136, 0.4);
-  background: rgba(0, 0, 0, 0.85);
+  box-shadow: 0 0 28px rgba(0, 255, 136, 0.5);
+  background: rgba(0, 0, 0, 0.9);
+  transform: scale(1.05);
 }
 
 .history {
@@ -343,16 +346,18 @@
   }
 
   .digit-input {
-    font-size: 2.2rem;
-    padding: 18px;
+    font-size: 2.6rem;
+    padding: 20px;
     border-width: 3px;
-    min-height: 72px;
-    background: rgba(0, 0, 0, 0.85);
-    box-shadow: 0 0 18px rgba(0, 255, 136, 0.4);
+    min-height: 85px;
+    min-width: 80px;
+    background: rgba(0, 0, 0, 0.88);
+    box-shadow: 0 0 24px rgba(0, 255, 136, 0.5);
   }
 
   .digit-input:focus {
-    box-shadow: 0 0 25px rgba(0, 255, 136, 0.55);
+    box-shadow: 0 0 32px rgba(0, 255, 136, 0.65);
+    transform: scale(1.03);
   }
 
   .digits {
