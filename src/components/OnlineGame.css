@@ -1081,11 +1081,12 @@
   }
 
   .guess-input {
-    width: 70px;
-    height: 80px;
-    font-size: 2rem;
+    width: 85px;
+    height: 95px;
+    font-size: 2.4rem;
     border-radius: 12px;
-    border-width: 2px;
+    border-width: 3px;
+    line-height: 1;
   }
 
   .guess-input:focus {
@@ -1236,9 +1237,10 @@
   }
 
   .guess-input {
-    width: 80px;
-    height: 90px;
-    font-size: 2.2rem;
+    width: 90px;
+    height: 100px;
+    font-size: 2.6rem;
+    line-height: 1;
   }
 
   .guess-btn {
