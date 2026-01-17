@@ -348,16 +348,20 @@ function BattleRoyale({ socket, onBack }) {
       {view !== "menu" && view !== "create" && view !== "join" && (
         <>
           <header className="br-header">
-            <div className="room-pill">ROOM: {roomCode || "..."}</div>
-            <div className="player-pill">YOU: {name}</div>
-            <div className="player-pill">MODE: {mode.toUpperCase()}</div>
-            {timeLeft !== null && <div className="player-pill">⏱ {timeLeft}s</div>}
-            {isHost && !started && (
-              <button className="start-btn" onClick={startGame}>
-                Start Battle
-              </button>
-            )}
-            <button className="back-btn" onClick={onBack}>Exit</button>
+            <div className="header-info">
+              <div className="room-pill">ROOM: {roomCode || "..."}</div>
+              <div className="player-pill">YOU: {name}</div>
+              <div className="player-pill">MODE: {mode.toUpperCase()}</div>
+              {timeLeft !== null && <div className="player-pill">⏱ {timeLeft}s</div>}
+            </div>
+            <div className="header-actions">
+              {isHost && !started && (
+                <button className="start-btn" onClick={startGame}>
+                  Start Battle
+                </button>
+              )}
+              <button className="back-btn" onClick={onBack}>Exit</button>
+            </div>
           </header>
 
           <main className="br-main">

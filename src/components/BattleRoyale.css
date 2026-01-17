@@ -92,13 +92,31 @@
 }
 
 .br-header {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto;
   align-items: center;
   gap: 12px;
   padding: 16px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   background: rgba(0, 0, 0, 0.35);
+}
+
+.header-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
   flex-wrap: wrap;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.br-header > .back-btn {
+  margin-left: 0;
 }
 
 .room-pill,
@@ -133,7 +151,6 @@
 }
 
 .back-btn {
-  margin-left: auto;
   background: transparent;
   border-color: rgba(255, 255, 255, 0.2);
 }
@@ -336,6 +353,20 @@
 }
 
 @media (max-width: 480px) {
+  .br-header {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .header-info {
+    width: 100%;
+  }
+
+  .header-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+
   .lb-header,
   .lb-row {
     grid-template-columns: 60px 1fr 100px;
