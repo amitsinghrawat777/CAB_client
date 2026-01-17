@@ -60,6 +60,8 @@ function OnlineGame({ socket, gameData, onBack }) {
   const [chatOpen, setChatOpen] = useState(false);
   const chatRef = useRef(null);
   const lastSystemRef = useRef({ type: null, at: 0 });
+  const [toast, setToast] = useState("");
+  const toastTimerRef = useRef(null);
 
   const pushSystemMessage = (message) => {
     setChatMessages((prev) => [...prev, { sender: "SYSTEM", message }]);
@@ -71,6 +73,15 @@ function OnlineGame({ socket, gameData, onBack }) {
     if (lastType === type && now - at < cooldownMs) return;
     lastSystemRef.current = { type, at: now };
     pushSystemMessage(message);
+  };
+
+  const showToast = (message, duration = 1800) => {
+    setToast(message);
+    if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
+    toastTimerRef.current = setTimeout(() => {
+      setToast("");
+      toastTimerRef.current = null;
+    }, duration);
   };
   
   // Game result
@@ -389,6 +400,10 @@ function OnlineGame({ socket, gameData, onBack }) {
                     onChange={(e) => {
                       const val = e.target.value;
                       if (/^\d?$/.test(val)) {
+                        if (val && secret.includes(val) && secret[i] !== val) {
+                          showToast("No duplicate digits allowed");
+                          return;
+                        }
                         const newSecret = secret.split("");
                         newSecret[i] = val;
                         setSecret(newSecret.join(""));
@@ -603,6 +618,10 @@ function OnlineGame({ socket, gameData, onBack }) {
                     onChange={(e) => {
                       const val = e.target.value;
                       if (/^\d?$/.test(val)) {
+                        if (val && guess.includes(val) && guess[i] !== val) {
+                          showToast("No duplicate digits allowed");
+                          return;
+                        }
                         const newGuess = guess.split("");
                         newGuess[i] = val;
                         setGuess(newGuess.join(""));
@@ -688,6 +707,12 @@ function OnlineGame({ socket, gameData, onBack }) {
           </div>
         )}
       </div>
+
+      {toast && (
+        <div className="fixed left-1/2 -translate-x-1/2 bottom-6 z-50 px-4 py-2 bg-black/80 border border-br-hot/40 text-white text-sm rounded-md shadow-[0_10px_24px_rgba(0,0,0,0.35)]">
+          {toast}
+        </div>
+      )}
     </div>
   );
 }
