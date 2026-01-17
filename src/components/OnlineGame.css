@@ -201,6 +201,7 @@
   outline: none;
   transition: all 0.3s ease;
   box-shadow: 0 0 12px rgba(0, 255, 136, 0.25);
+  caret-color: #00ff88;
 }
 
 .digit-input:focus {
@@ -497,6 +498,7 @@
   outline: none;
   transition: all 0.3s ease;
   box-shadow: 0 0 15px rgba(0, 255, 136, 0.25);
+  caret-color: #00ff88;
 }
 
 .guess-input:focus {
@@ -1375,7 +1377,6 @@
     background: rgba(0, 0, 0, 0.85);
     color: #e8fff5;
     box-shadow: 0 0 20px rgba(0, 255, 136, 0.45);
-    caret-color: #00ff88;
   }
 
   .guess-input:focus {
@@ -1558,7 +1559,6 @@
 @media (hover: none) and (pointer: coarse) {
   .digit-input, .guess-input {
     font-size: 1.5rem;
-    caret-color: #00ff88;
   }
 
   .lock-btn, .guess-btn, .rematch-btn, .exit-btn {

@@ -266,6 +266,7 @@
   transition: all 0.2s ease;
   min-height: 60px;
   box-shadow: 0 0 12px rgba(0, 255, 136, 0.25);
+  caret-color: var(--br-accent);
 }
 
 .digit-input:focus {

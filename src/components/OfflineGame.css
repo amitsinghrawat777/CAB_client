@@ -90,6 +90,7 @@
   outline: none;
   transition: all 0.3s ease;
   box-shadow: 0 0 12px rgba(0, 255, 136, 0.25);
+  caret-color: #00ff88;
 }
 
 .digit-input:focus {
@@ -103,6 +104,7 @@
   color: #0088ff;
   background: rgba(0, 0, 0, 0.7);
   box-shadow: 0 0 12px rgba(0, 136, 255, 0.25);
+  caret-color: #0088ff;
 }
 
 .digit-input.guess:focus {
@@ -892,7 +894,6 @@
 @media (hover: none) and (pointer: coarse) {
   .digit-input {
     font-size: 1.8rem;
-    caret-color: #00ff88;
   }
 
   .submit-btn, .confirm-btn, .play-again-btn, .exit-btn {
