@@ -115,10 +115,6 @@
   flex-shrink: 0;
 }
 
-.br-header > .back-btn {
-  margin-left: 0;
-}
-
 .room-pill,
 .player-pill {
   padding: 10px 14px;
