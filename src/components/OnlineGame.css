@@ -489,7 +489,7 @@
 .guess-input {
   flex: 1;
   max-width: 85px;
-  min-width: 70px;
+  min-width: 80px;
   height: 90px;
   background: rgba(0, 0, 0, 0.8);
   border: 3px solid rgba(0, 255, 136, 0.6);
@@ -903,9 +903,9 @@
   }
 
   .guess-input {
-    flex: 1 1 85px;
+    flex: 1 1 90px;
     max-width: 110px;
-    min-width: 80px;
+    min-width: 90px;
     height: 100px;
     font-size: 2.8rem;
     line-height: 1;
@@ -1383,7 +1383,7 @@
 
   .guess-input {
     max-width: 78px;
-    min-width: 70px;
+    min-width: 75px;
     height: 85px;
     font-size: 2.6rem;
     line-height: 1;
