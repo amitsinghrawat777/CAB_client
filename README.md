@@ -18,6 +18,7 @@ A modern, real-time multiplayer implementation of the classic Cows and Bulls (al
 - [Installation](#-installation)
 - [Environment Variables](#-environment-variables)
 - [Available Scripts](#-available-scripts)
+- [Server Component](#️-server-component)
 - [Game Modes](#-game-modes)
 - [How to Play](#-how-to-play)
 - [Development](#-development)
@@ -96,6 +97,10 @@ CAB_client/
 ├── public/                 # Static assets
 │   └── vite.svg           # Vite logo
 │
+├── server/                # Backend server
+│   ├── index.js           # Server entry point & Socket.IO logic
+│   └── package.json       # Server dependencies
+│
 ├── src/                   # Source code
 │   ├── components/        # React components
 │   │   ├── MainMenu.jsx          # Landing page with mode selection
@@ -164,6 +169,10 @@ CAB_client/
 5. **Open your browser**
    
    Navigate to `http://localhost:5173` (or the port shown in terminal)
+
+6. **(Optional) Set up the backend server**
+   
+   For online game modes, you need to run the included backend server. See the [Server Component](#️-server-component) section for detailed setup instructions.
 
 ---
 
@@ -260,6 +269,114 @@ Explanation:
 
 ---
 
+## 🖥️ Server Component
+
+The project includes a **Node.js backend server** that handles all real-time multiplayer functionality using Socket.IO. This server is essential for online game modes (1v1 and Battle Royale).
+
+### Server Features
+
+- **Real-time Communication**: WebSocket-based bidirectional communication via Socket.IO
+- **Room Management**: Create and join game rooms with unique 4-character codes
+- **Game State Management**: Server-side validation and synchronization
+- **Multiple Game Modes**:
+  - **1v1 Duel**: Standard and Blitz modes with chat support
+  - **Battle Royale**: Multi-player tournaments with up to 100 players
+  - **eSports Mode**: Spectator-friendly competitive mode
+- **Timer Management**: Blitz mode with countdown timers
+- **Reconnection Handling**: 30-second grace period for disconnected players
+- **Rematch System**: Quick rematch functionality for 1v1 games
+- **Leaderboard**: Real-time score tracking and sorting
+
+### Server Installation
+
+1. **Navigate to server directory**
+   ```bash
+   cd server
+   ```
+
+2. **Install server dependencies**
+   ```bash
+   npm install
+   ```
+
+3. **Start the server**
+   
+   **Development mode (with auto-restart):**
+   ```bash
+   npm run dev
+   ```
+   
+   **Production mode:**
+   ```bash
+   npm start
+   ```
+
+4. **Server will run on** `http://localhost:3001` (or the port specified in `PORT` environment variable)
+
+### Server Environment Variables
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `PORT` | Server port number | `3001` |
+
+**Example:**
+```bash
+PORT=8080 npm start
+```
+
+### Server Dependencies
+
+- **Express 5.2.1** - Web framework for HTTP endpoints
+- **Socket.IO 4.8.3** - Real-time WebSocket library
+- **CORS 2.8.5** - Cross-Origin Resource Sharing middleware
+- **Nodemon 3.1.11** - Development auto-reload tool
+
+### Server Architecture
+
+The server implements a stateful architecture with in-memory storage:
+
+- **Global State Management**:
+  - `rooms{}` - 1v1 duel rooms
+  - `battleRooms{}` - Battle Royale rooms
+  - `socketToRoom{}` - Fast socket-to-room lookup
+  - `timers{}` - Blitz mode countdown timers
+  - `reconnectTimers{}` - Grace period for disconnections
+
+- **Core Functions**:
+  - `generateRoomCode()` - Creates unique 4-character room codes
+  - `generateDigitCode()` - Generates random 4-digit secret codes
+  - `computeCowsBulls()` - Validates guesses and calculates feedback
+  - `sortLeaderboard()` - Sorts Battle Royale players by score
+
+- **Socket Events**:
+  - **Duel Mode**: `create_room`, `join_room`, `set_secret`, `send_guess`, `chat_message`, `rematch_request`
+  - **Battle Royale**: `battle_create`, `battle_join`, `battle_start`, `battle_guess`, `battle_history_request`
+  - **Lifecycle**: `rejoin_room`, `leave_room`, `disconnect`
+
+### Connecting Client to Server
+
+Ensure the client's `.env` file points to your server:
+
+```env
+VITE_SERVER_URL=http://localhost:3001
+```
+
+For production deployments, update this to your hosted server URL.
+
+### Server Deployment
+
+The server can be deployed to any Node.js hosting platform:
+
+- **Heroku**: Set `PORT` environment variable (automatically provided)
+- **Railway**: Auto-detects Node.js apps
+- **Render**: Specify `npm start` as the start command
+- **DigitalOcean App Platform**: Configure buildpack for Node.js
+- **AWS/GCP/Azure**: Deploy as containerized application
+
+**Important**: Ensure WebSocket support is enabled on your hosting platform.
+
+---
+
 ## 💻 Development
 
 ### Project Architecture
@@ -302,9 +419,10 @@ This project is open source and available under the [MIT License](LICENSE).
 
 ## 🔗 Related
 
-- **Backend Server**: This client requires a compatible Socket.IO backend server
+- **Backend Server**: This repository includes a full-featured Socket.IO backend server in the `server/` directory
 - **Game Logic**: All game logic is implemented client-side for offline mode
 - **Real-time Sync**: Server validates moves and synchronizes state for online modes
+- **Repository**: [github.com/amitsinghrawat777/CAB_client](https://github.com/amitsinghrawat777/CAB_client)
 
 ---
 
